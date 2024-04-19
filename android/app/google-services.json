@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1076720265070",
+    "project_id": "tarimtek-1adec",
+    "storage_bucket": "tarimtek-1adec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076720265070:android:188d248edf69a6e86c037f",
+        "android_client_info": {
+          "package_name": "com.example.tarimtek"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBigsgFazYLCqPJ773OmYTjSwzhDomW_hU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
