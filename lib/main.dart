@@ -1,10 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tarimtek/firebase_options.dart';
+import 'package:tarimtek/locator/locator.dart';
 import 'package:tarimtek/pages/landing_page.dart';
-import 'package:tarimtek/services/firebase_auth_service.dart';
+import 'package:tarimtek/viewmodel/user_model.dart';
 
 void main() async {
+  setupLacator();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -21,8 +24,9 @@ class MyApp extends StatelessWidget {
       title: "TarımTek",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
-      home: LandingPage(
-        authService: FirebaseAuthService(),
+      home: ChangeNotifierProvider(
+        create: (context) =>UserModel(),
+        child: const LandingPage(),
       ),
     );
   }

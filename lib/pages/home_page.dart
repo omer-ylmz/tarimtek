@@ -1,20 +1,15 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'package:tarimtek/model/user_model.dart';
-import 'package:tarimtek/services/auth_base.dart';
+import 'package:tarimtek/viewmodel/user_model.dart';
 
+// ignore: must_be_immutable
 class HomePage extends StatelessWidget {
-  final AuthBase authService;
-  final VoidCallback onSignOut;
   final AppUser user;
 
-  const HomePage(
-      {super.key,
-      required this.authService,
-      required this.onSignOut,
-      required this.user});
+  const HomePage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +19,7 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: FloatingActionButton(
-              onPressed: () {
-                _cikisYap();
-              },
+              onPressed: () => _cikisYap(context),
               child: const Text(
                 "Çıkış Yap",
                 textAlign: TextAlign.center,
@@ -42,9 +35,9 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Future<bool> _cikisYap() async {
-    bool sonuc = await authService.signOut();
-    onSignOut();
+  Future<bool> _cikisYap(BuildContext context) async {
+    final _userModel = Provider.of<UserModel>(context, listen: false);
+    bool sonuc = await _userModel.signOut();
     return sonuc;
   }
 }

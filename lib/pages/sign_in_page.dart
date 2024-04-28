@@ -1,23 +1,18 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, no_leading_underscores_for_local_identifiers
 // ignore_for_file: unused_field, unnecessary_import
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
+import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/model/user_model.dart';
-import 'package:tarimtek/services/auth_base.dart';
+import 'package:tarimtek/viewmodel/user_model.dart';
 
 class SignInPage extends StatefulWidget {
-  final Function(AppUser) onSignIn;
-  final AuthBase authService;
-
   const SignInPage({
     super.key,
-    required this.onSignIn,
-    required this.authService,
   });
 
   @override
@@ -29,10 +24,10 @@ class _SignInPageState extends State<SignInPage> {
   bool checkBoxValue = false;
   late FirebaseAuth auth;
 
-  void _misafirGirisi() async {
-    AppUser? user = await widget.authService.signInAnonymusly();
-    widget.onSignIn(user!);
-    debugPrint("Oturum açan User ID${user.userId}");
+  void _misafirGirisi(BuildContext context) async {
+    final _userModel = Provider.of<UserModel>(context, listen: false);
+    AppUser? user = await _userModel.signInAnonymusly();
+    debugPrint("Oturum açan User ID${user!.userId.toString()}");
   }
 
   @override
@@ -207,7 +202,7 @@ class _SignInPageState extends State<SignInPage> {
                       backgroundColor:
                           MaterialStatePropertyAll(Sabitler.ikinciRenk),
                     ),
-                    onPressed: _misafirGirisi,
+                    onPressed: () => _misafirGirisi(context),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

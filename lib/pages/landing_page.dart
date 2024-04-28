@@ -1,19 +1,15 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, no_leading_underscores_for_local_identifiers
 // ignore_for_file: unused_field
 
 import 'package:flutter/material.dart';
-import 'package:tarimtek/model/user_model.dart';
-
+import 'package:provider/provider.dart';
 import 'package:tarimtek/pages/home_page.dart';
 import 'package:tarimtek/pages/sign_in_page.dart';
-import 'package:tarimtek/services/auth_base.dart';
+import 'package:tarimtek/viewmodel/user_model.dart';
 
 class LandingPage extends StatefulWidget {
-  final AuthBase authService;
-
   const LandingPage({
     super.key,
-    required this.authService,
   });
 
   @override
@@ -21,40 +17,21 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  AppUser? _user;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkCurrentUser();
-  }
-
-  Future<void> _checkCurrentUser() async {
-    _user = await widget.authService.currentUser();
-  }
-
-  void _updateUser(AppUser? user) {
-    setState(() {
-      _user = user;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (_user == null) {
-      return SignInPage(
-        authService: widget.authService,
-        onSignIn: (user) {
-          _updateUser(user);
-        },
-      );
+    final _userModel = Provider.of<UserModel>(context);
+
+    if (_userModel.state == ViewState.idle) {
+      if (_userModel.user == null) {
+        return  const SignInPage();
+      } else {
+        return HomePage(user: _userModel.user!);
+      }
     } else {
-      return HomePage(
-        authService: widget.authService,
-        user: _user!,
-        onSignOut: () {
-          _updateUser(null);
-        },
+      return  const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     }
   }
