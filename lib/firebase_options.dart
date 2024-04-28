@@ -60,6 +60,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1076720265070',
     projectId: 'tarimtek-1adec',
     storageBucket: 'tarimtek-1adec.appspot.com',
+    androidClientId: '1076720265070-8urgnmht97nfdcvdje156qcqhkckgpva.apps.googleusercontent.com',
+    iosClientId: '1076720265070-6obvs24rnqe27a3m53oh0lvjkf2d43ng.apps.googleusercontent.com',
     iosBundleId: 'com.example.tarimtek',
   );
 
@@ -72,4 +74,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'tarimtek-1adec.appspot.com',
     measurementId: 'G-ZH84WXB7BS',
   );
+
 }

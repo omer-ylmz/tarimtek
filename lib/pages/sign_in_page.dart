@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, no_leading_underscores_for_local_identifiers
 // ignore_for_file: unused_field, unnecessary_import
 
+
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,13 @@ class _SignInPageState extends State<SignInPage> {
   void _misafirGirisi(BuildContext context) async {
     final _userModel = Provider.of<UserModel>(context, listen: false);
     AppUser? user = await _userModel.signInAnonymusly();
+    debugPrint("Oturum açan User ID${user!.userId.toString()}");
+  }
+
+  
+  void _googleIleGiris(BuildContext context) async {
+    final _userModel = Provider.of<UserModel>(context, listen: false);
+    AppUser? user = await _userModel.signInWithGoogle();
     debugPrint("Oturum açan User ID${user!.userId.toString()}");
   }
 
@@ -174,7 +183,7 @@ class _SignInPageState extends State<SignInPage> {
                       backgroundColor:
                           MaterialStatePropertyAll(Sabitler.ikinciRenk),
                     ),
-                    onPressed: () {},
+                    onPressed: () => _googleIleGiris(context),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -247,4 +256,5 @@ class _SignInPageState extends State<SignInPage> {
       ),
     );
   }
+  
 }

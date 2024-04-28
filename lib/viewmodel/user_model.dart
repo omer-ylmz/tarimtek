@@ -66,4 +66,18 @@ class UserModel with ChangeNotifier implements AuthBase {
       state = ViewState.idle; // İşlem tamamlandığında ViewState'i güncelle
     }
   }
+
+  @override
+  Future<AppUser?> signInWithGoogle() async {
+    try {
+      state = ViewState.busy; // İşlem başladığında ViewState'i güncelle
+      _user = await _userRepository.signInWithGoogle();
+      return _user;
+    } catch (e) {
+      debugPrint("Vİewmodeldeki signIn da hata $e");
+      return null;
+    } finally {
+      state = ViewState.idle; // İşlem tamamlandığında ViewState'i güncelle
+    }
+  }
 }

@@ -12,7 +12,20 @@
           "package_name": "com.example.tarimtek"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1076720265070-8urgnmht97nfdcvdje156qcqhkckgpva.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tarimtek",
+            "certificate_hash": "4d9bba1d0d89af4ffa3198ea4c15dd8e4a83714b"
+          }
+        },
+        {
+          "client_id": "1076720265070-pf17id95rv22njfujsqlucnmtd6aorer.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBigsgFazYLCqPJ773OmYTjSwzhDomW_hU"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076720265070-pf17id95rv22njfujsqlucnmtd6aorer.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1076720265070-6obvs24rnqe27a3m53oh0lvjkf2d43ng.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tarimtek"
+              }
+            }
+          ]
         }
       }
     }
