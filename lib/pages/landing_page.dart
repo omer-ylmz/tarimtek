@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tarimtek/pages/home_page.dart';
-import 'package:tarimtek/pages/sign_in_page.dart';
+import 'package:tarimtek/pages/sign_in/sign_in_page.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class LandingPage extends StatefulWidget {

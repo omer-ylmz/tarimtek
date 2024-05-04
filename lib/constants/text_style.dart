@@ -12,7 +12,7 @@ class Sabitler {
   static const String baslikText = "Ortalama Hesapla";
 
   static final TextStyle baslikStyle = GoogleFonts.quicksand(
-      fontSize: 24, fontWeight: FontWeight.w900, color: anaRenk);
+      fontSize: 30, fontWeight: FontWeight.w900, color: anaRenk);
 
   static final TextStyle yaziMorStyle = GoogleFonts.quicksand(
       fontSize: 16, fontWeight: FontWeight.w700, color: anaRenk);

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/firebase_options.dart';
 import 'package:tarimtek/locator/locator.dart';
 import 'package:tarimtek/pages/landing_page.dart';
@@ -20,13 +21,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "TarımTek",
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.green),
-      home: ChangeNotifierProvider(
-        create: (context) =>UserModel(),
-        child: const LandingPage(),
+    return ChangeNotifierProvider(
+      create: (context) => UserModel(),
+      child: MaterialApp(
+        title: "TarımTek",
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(primaryColor: Sabitler.anaRenk),
+        home: const LandingPage(),
       ),
     );
   }
