@@ -23,7 +23,8 @@ class FirebaseAuthService implements AuthBase {
     if (user == null) {
       return null;
     }
-    return AppUser(userId: user.uid);
+    return AppUser(
+        userId: user.uid, email: user.email!, phoneNumber: user.phoneNumber);
   }
 
   @override
@@ -77,6 +78,7 @@ class FirebaseAuthService implements AuthBase {
     try {
       UserCredential sonuc = await _auth.createUserWithEmailAndPassword(
           email: email, password: sifre);
+
       return _userFromFirebase(sonuc.user);
     } catch (e) {
       print("current user hata" + e.toString());

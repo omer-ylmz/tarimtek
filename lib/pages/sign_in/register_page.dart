@@ -22,6 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String _sifreTekrar = "";
   bool _sifreGizli = true;
   bool _sifreGizliTekrar = true;
+  String _girilenSifreKontrol = "";
 
   @override
   void initState() {
@@ -136,7 +137,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                   validator: (value) {
                                 if (value!.length < 6) {
                                   return "Şifre en az 6 karakter olmalı";
-                                } else if (_sifre != value!) {
+                                } else if (_girilenSifreKontrol != value!) {
+                                  debugPrint("$_girilenSifreKontrol ve $value");
                                   return "Şifreler birbirleriyle uyuşmuyor";
                                 }
                               }),
@@ -197,6 +199,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       onSaved: onSaved,
+      onChanged: (value) {
+        setState(() {
+          _girilenSifreKontrol = value!;
+        });
+      },
       validator: validator,
     );
   }
