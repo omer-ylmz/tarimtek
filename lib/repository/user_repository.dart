@@ -42,13 +42,13 @@ class UserRepository implements AuthBase {
     }
   }
 
-    @override
+  @override
   Future<AppUser?> signInWithGoogle() async {
     if (appMode == AppMode.debug) {
       return await _fakeAuthentication.signInWithGoogle();
     } else {
       AppUser? _user = await _firebaseAuthService.signInWithGoogle();
-    
+
       bool? _sonuc = await _firestoreDBService.saveUser(_user!);
       if (_sonuc == true) {
         return _user;
@@ -71,14 +71,15 @@ class UserRepository implements AuthBase {
     } else {
       AppUser? _user = await _firebaseAuthService.createUserInWithEmailPassword(
           adSoyad, numara, email, sifre);
-      _user!.phoneNumber = numara;
-      _user!.userName = adSoyad;
+      if (_user != null) {
+        // _user değişkeni null değilse, işlemleri yap
+        _user.phoneNumber = numara ?? "";
+        _user.userName = adSoyad ?? "";
 
-      bool? _sonuc = await _firestoreDBService.saveUser(_user!);
-      if (_sonuc == true) {
-        return _user;
-      } else {
-        return null;
+        bool? _sonuc = await _firestoreDBService.saveUser(_user);
+        if (_sonuc == true) {
+          return _user;
+        }
       }
     }
   }

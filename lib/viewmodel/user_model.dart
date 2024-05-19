@@ -91,21 +91,17 @@ class UserModel with ChangeNotifier implements AuthBase {
   Future<AppUser?> createUserInWithEmailPassword(
       String adSoyad, String numara, String email, String sifre) async {
     try {
-      if (_emailSifreKontrol(email, sifre)) {
-        state = ViewState.busy; // İşlem başladığında ViewState'i güncelle
-        _user = await _userRepository.createUserInWithEmailPassword(
-          adSoyad,
-          numara,
-          email,
-          sifre,
-        );
-        return _user;
-      } else {
-        return null;
-      }
+      state = ViewState.busy; // İşlem başladığında ViewState'i güncelle
+      _user = await _userRepository.createUserInWithEmailPassword(
+        adSoyad,
+        numara,
+        email,
+        sifre,
+      );
+      return _user;
     } catch (e) {
-      debugPrint("Vİewmodeldeki current user hata $e");
-      return null;
+      debugPrint("Vİewmodeldeki current user hata1 $e $_user");
+      return null; // Hata durumunda null döndür
     } finally {
       state = ViewState.idle; // İşlem tamamlandığında ViewState'i güncelle
     }

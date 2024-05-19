@@ -17,8 +17,14 @@ class FirestoreDBService implements DBBase {
     AppUser _okunanUserBilgileriNesne =
         AppUser.fromMap(_okunanUserBilgileriMap!);
 
-  print("Okunan user nesensi: "+_okunanUserBilgileriNesne.toString());
+    print("Okunan user nesensi: " + _okunanUserBilgileriNesne.toString());
 
     return true;
+  }
+
+  Future<bool> checkEmailExists(String email) async {
+    // E-posta adresi veritabanında mevcut mu kontrol et
+    QuerySnapshot querySnapshot = await _firebaseauth.collection("users").where("email", isEqualTo: email).get();
+    return querySnapshot.docs.isNotEmpty;
   }
 }

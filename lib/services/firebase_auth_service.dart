@@ -78,7 +78,12 @@ class FirebaseAuthService implements AuthBase {
     try {
       UserCredential sonuc = await _auth.createUserWithEmailAndPassword(
           email: email, password: sifre);
-
+      var _myUser = sonuc.user;
+      if (!_myUser!.emailVerified) {
+        await _myUser.sendEmailVerification();
+      } else {
+        print("kullanıcın maili onaylanmış, ilgili sayfaya gidebilir.");
+      }
       return _userFromFirebase(sonuc.user);
     } catch (e) {
       print("current user hata" + e.toString());
@@ -90,7 +95,12 @@ class FirebaseAuthService implements AuthBase {
     try {
       UserCredential sonuc =
           await _auth.signInWithEmailAndPassword(email: email, password: sifre);
-      return _userFromFirebase(sonuc.user);
+      var _myUser = sonuc.user;
+      if (_myUser!.emailVerified) {
+        return _userFromFirebase(sonuc.user);
+      } else {
+        print("Email doğrulaması yapılmamış");
+      }
     } catch (e) {
       print("Sign In email user hata" + e.toString());
     }

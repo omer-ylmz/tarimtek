@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
+import 'package:tarimtek/locator/locator.dart';
+import 'package:tarimtek/services/firebase_auth_service.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -14,6 +16,8 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
+  final FirebaseAuthService _firebaseAuthService =
+      locator<FirebaseAuthService>();
   late FirebaseAuth auth;
   String _adSoyad = "";
   String _telefon = "";
@@ -30,14 +34,59 @@ class _RegisterPageState extends State<RegisterPage> {
     auth = FirebaseAuth.instance;
   }
 
-  void _formSubmit() {
+  void _formSubmit() async {
     bool _validate = _formKey.currentState!.validate();
     if (_validate == true) {
       _formKey.currentState?.save(); // Form alanlarını kaydet
       debugPrint("email $_email şifre $_sifre");
-      final _userModel = Provider.of<UserModel>(context, listen: false);
-      _userModel.createUserInWithEmailPassword(
-          _adSoyad, _telefon, _email, _sifre);
+
+      try {
+        // Firebase Authentication kullanarak kullanıcı oluştur
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _email,
+          password: _sifre,
+        );
+
+        // Kullanıcı başarıyla oluşturulduğunda devam edilecek işlemler buraya yazılabilir
+      } catch (e) {
+        // Eğer hata bir FirebaseAuthException ise ve e-posta adresi zaten kayıtlıysa
+        if (e is FirebaseAuthException && e.code == 'email-already-in-use') {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Hata'),
+              content: Text('Böyle bir kullanıcı zaten kayıtlı.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Tamam'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          // Diğer hataları işle
+          print('Hata: $e');
+        }
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Hata'),
+          content: Text('Lütfen girilen bilgileri kontrol edin.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Tamam'),
+            ),
+          ],
+        ),
+      );
     }
   }
 

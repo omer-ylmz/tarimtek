@@ -3,15 +3,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppUser {
   final String userId;
-  String email;
+  String? email;
   String? userName = "";
   String? phoneNumber = "";
-  String profilURL =
+  String? profilURL =
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRS6O3NpGio51d-L_X--ggYNmTbN7STAn262kSrtu5zuw&s";
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  AppUser({required this.userId, required this.email,this.phoneNumber,this.userName});
+  AppUser(
+      {required this.userId,
+      required this.email,
+      this.phoneNumber,
+      this.userName});
 
   Map<String, dynamic> toMap() {
     return {
