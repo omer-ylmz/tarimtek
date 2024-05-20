@@ -92,4 +92,13 @@ class UserRepository implements AuthBase {
       return await _firebaseAuthService.signInWithEmailPassword(email, sifre);
     }
   }
+
+  @override
+  Future<AppUser?> changePassword(String email) async {
+    if (appMode == AppMode.debug) {
+      return await _fakeAuthentication.changePassword(email);
+    } else {
+      return await _firebaseAuthService.changePassword(email);
+    }
+  }
 }

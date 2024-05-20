@@ -141,4 +141,18 @@ class UserModel with ChangeNotifier implements AuthBase {
     }
     return sonuc;
   }
+
+  @override
+  Future<AppUser?> changePassword(String email) async {
+    try {
+      state = ViewState.busy; // İşlem başladığında ViewState'i güncelle
+      _user = await _userRepository.changePassword(email);
+      return _user;
+    } catch (e) {
+      debugPrint("Vİewmodeldeki change Password Hata $e $_user");
+      return null; // Hata durumunda null döndür
+    } finally {
+      state = ViewState.idle; // İşlem tamamlandığında ViewState'i güncelle
+    }
+  }
 }

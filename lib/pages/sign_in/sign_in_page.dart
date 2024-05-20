@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/model/user_model.dart';
 import 'package:tarimtek/pages/home_page.dart';
+import 'package:tarimtek/pages/sign_in/change_password.dart';
 import 'package:tarimtek/pages/sign_in/register_page.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
@@ -67,7 +68,7 @@ class _SignInPageState extends State<SignInPage> {
             ),
           );
         }
-      } //TODO: HATALI GİRİŞ KONTROL YAPILACAK
+      } else {}
     }
   }
 
@@ -175,7 +176,11 @@ class _SignInPageState extends State<SignInPage> {
                                 style: Sabitler.yaziMorStyle,
                               ),
                               onTap: () {
-                                debugPrint("tıklandı");
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChangePassword(),
+                                    ));
                               },
                             )
                           ],
@@ -228,25 +233,6 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 40, right: 40),
-                          child: ElevatedButton(
-                            style: const ButtonStyle(
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Sabitler.ikinciRenk),
-                            ),
-                            onPressed: () => _misafirGirisi(context),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Misafir Giriş",
-                                  style: Sabitler.yaziMorStyle,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
                         const SizedBox(
                           height: 10,
                         ),

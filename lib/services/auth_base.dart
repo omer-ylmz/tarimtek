@@ -8,4 +8,5 @@ abstract class AuthBase {
   Future<AppUser?> signInWithEmailPassword(String email, String sifre);
   Future<AppUser?> createUserInWithEmailPassword(
       String adSoyad, String numara, String email, String sifre);
+  Future<AppUser?> changePassword(String email);
 }

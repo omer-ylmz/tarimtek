@@ -23,12 +23,12 @@ class _LandingPageState extends State<LandingPage> {
 
     if (_userModel.state == ViewState.idle) {
       if (_userModel.user == null) {
-        return  const SignInPage();
+        return const SignInPage();
       } else {
         return HomePage(user: _userModel.user!);
       }
     } else {
-      return  const Scaffold(
+      return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
         ),

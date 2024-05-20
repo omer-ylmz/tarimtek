@@ -105,4 +105,16 @@ class FirebaseAuthService implements AuthBase {
       print("Sign In email user hata" + e.toString());
     }
   }
+
+  @override
+  Future<AppUser?> changePassword(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      // Şifre sıfırlama e-postası başarıyla gönderildi
+      print('Şifre sıfırlama e-postası gönderildi: $email');
+    } catch (e) {
+      // Hata durumunda hata mesajını yazdır
+      print('Şifre sıfırlama e-postası gönderilemedi: $e');
+    }
+  }
 }

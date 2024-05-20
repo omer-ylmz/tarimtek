@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/locator/locator.dart';
+import 'package:tarimtek/pages/sign_in/email_aktivasyon.dart';
 import 'package:tarimtek/services/firebase_auth_service.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
@@ -46,6 +47,13 @@ class _RegisterPageState extends State<RegisterPage> {
           email: _email,
           password: _sifre,
         );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EmailAktivasyon(
+                email: _email,
+              ),
+            ));
 
         // Kullanıcı başarıyla oluşturulduğunda devam edilecek işlemler buraya yazılabilir
       } catch (e) {
@@ -54,14 +62,19 @@ class _RegisterPageState extends State<RegisterPage> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('Hata'),
-              content: Text('Böyle bir kullanıcı zaten kayıtlı.'),
+              content: Text(
+                'Böyle bir kullanıcı zaten kayıtlı.',
+                style: Sabitler.yaziMorStyle,
+              ),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Tamam'),
+                  child: Text(
+                    'Tamam',
+                    style: Sabitler.yaziMorStyle,
+                  ),
                 ),
               ],
             ),
@@ -75,14 +88,19 @@ class _RegisterPageState extends State<RegisterPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Hata'),
-          content: Text('Lütfen girilen bilgileri kontrol edin.'),
+          content: Text(
+            'Lütfen girilen bilgileri kontrol edin.',
+            style: Sabitler.yaziMorStyle,
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Tamam'),
+              child: Text(
+                'Tamam',
+                style: Sabitler.yaziMorStyle,
+              ),
             ),
           ],
         ),
