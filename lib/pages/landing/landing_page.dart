@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tarimtek/pages/home_page.dart';
+import 'package:tarimtek/pages/yonlendirme_sayfasi.dart';
 import 'package:tarimtek/pages/sign_in/sign_in_page.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
@@ -25,7 +25,7 @@ class _LandingPageState extends State<LandingPage> {
       if (_userModel.user == null) {
         return const SignInPage();
       } else {
-        return HomePage(user: _userModel.user!);
+        return Yonlendirme(user: _userModel.user!);
       }
     } else {
       return const Scaffold(

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tarimtek/locator/locator.dart';
-import 'package:tarimtek/model/user_model.dart';
+import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/repository/user_repository.dart';
 import 'package:tarimtek/services/auth_base.dart';
 
@@ -51,7 +51,7 @@ class UserModel with ChangeNotifier implements AuthBase {
       _user = await _userRepository.signInAnonymusly();
       return _user;
     } catch (e) {
-      debugPrint("Vİewmodeldeki signIn da hata $e");
+      debugPrint("Viewmodeldeki signIn da hata $e");
       return null;
     } finally {
       state = ViewState.idle; // İşlem tamamlandığında ViewState'i güncelle
@@ -99,9 +99,6 @@ class UserModel with ChangeNotifier implements AuthBase {
         sifre,
       );
       return _user;
-    } catch (e) {
-      debugPrint("Vİewmodeldeki current user hata1 $e $_user");
-      return null; // Hata durumunda null döndür
     } finally {
       state = ViewState.idle; // İşlem tamamlandığında ViewState'i güncelle
     }
@@ -110,16 +107,9 @@ class UserModel with ChangeNotifier implements AuthBase {
   @override
   Future<AppUser?> signInWithEmailPassword(String email, String sifre) async {
     try {
-      if (_emailSifreKontrol(email, sifre)) {
-        state = ViewState.busy; // İşlem başladığında ViewState'i güncelle
-        _user = await _userRepository.signInWithEmailPassword(email, sifre);
-        return _user;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      debugPrint("Vİewmodeldeki signİn email user hata $e");
-      return null;
+      state = ViewState.busy; // İşlem başladığında ViewState'i güncelle
+      _user = await _userRepository.signInWithEmailPassword(email, sifre);
+      return _user;
     } finally {
       state = ViewState.idle; // İşlem tamamlandığında ViewState'i güncelle
     }

@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, no_leading_underscores_for_local_identifiers
+// ignore_for_file: public_member_api_docs, sort_constructors_first, no_leading_underscores_for_local_identifiers, unused_element
 // ignore_for_file: unused_field, unnecessary_import
 
 import 'package:email_validator/email_validator.dart';
@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
-import 'package:tarimtek/model/user_model.dart';
-import 'package:tarimtek/pages/home_page.dart';
+import 'package:tarimtek/model/user.dart';
+import 'package:tarimtek/pages/yonlendirme_sayfasi.dart';
 import 'package:tarimtek/pages/sign_in/change_password.dart';
 import 'package:tarimtek/pages/sign_in/register_page.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
@@ -54,21 +54,25 @@ class _SignInPageState extends State<SignInPage> {
     if (_validate) {
       _formKey.currentState!.save();
       final _userModel = Provider.of<UserModel>(context, listen: false);
-      AppUser? user = await _userModel.signInWithEmailPassword(_email, _sifre);
-      debugPrint("Oturum açan User ID${user?.userId.toString()}");
-      debugPrint("$_email  $_sifre");
-
-      if (_userModel.state == ViewState.idle && user != null) {
-        if (mounted) {
-          // State hala "mounted" durumdaysa
-          Future.delayed(Duration(milliseconds: 10));
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => HomePage(user: user),
-            ),
-          );
+      try {
+        AppUser? user =
+            await _userModel.signInWithEmailPassword(_email, _sifre);
+        debugPrint("Oturum açan User ID${user?.userId.toString()}");
+        debugPrint("$_email  $_sifre");
+        if (_userModel.state == ViewState.idle && user != null) {
+          if (mounted) {
+            // State hala "mounted" durumdaysa
+            Future.delayed(const Duration(milliseconds: 10));
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => Yonlendirme(user: user),
+              ),
+            );
+          }
         }
-      } else {}
+      } on FirebaseAuthException catch (e) {
+        debugPrint("widgeteki hata yakalandı:" + e.code);
+      }
     }
   }
 
@@ -179,7 +183,8 @@ class _SignInPageState extends State<SignInPage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ChangePassword(),
+                                      builder: (context) =>
+                                          const ChangePassword(),
                                     ));
                               },
                             )
@@ -268,7 +273,7 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                 ])
-              : Center(
+              : const Center(
                   child: CircularProgressIndicator(),
                 )),
     );

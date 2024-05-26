@@ -1,4 +1,4 @@
-import 'package:tarimtek/model/user_model.dart';
+import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/services/auth_base.dart';
 
 class FakeAuthentication implements AuthBase {

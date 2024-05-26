@@ -1,11 +1,16 @@
+// ignore_for_file: unused_field, body_might_complete_normally_nullable, use_key_in_widget_constructors, no_leading_underscores_for_local_identifiers, avoid_print
+
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
+import 'package:tarimtek/exceptions.dart';
 import 'package:tarimtek/locator/locator.dart';
+import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/pages/sign_in/email_aktivasyon.dart';
 import 'package:tarimtek/services/firebase_auth_service.dart';
+import 'package:tarimtek/services/firestore_db_service.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -17,9 +22,6 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-  final FirebaseAuthService _firebaseAuthService =
-      locator<FirebaseAuthService>();
-  late FirebaseAuth auth;
   String _adSoyad = "";
   String _telefon = "";
   String _email = "";
@@ -32,78 +34,83 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    auth = FirebaseAuth.instance;
+  }
+
+  AppUser? _userFromFirebase(User? user) {
+    if (user == null) {
+      return null;
+    }
+    return AppUser(
+        userId: user.uid, email: user.email!, phoneNumber: user.phoneNumber);
   }
 
   void _formSubmit() async {
+    final _userModel = Provider.of<UserModel>(context, listen: false);
     bool _validate = _formKey.currentState!.validate();
-    if (_validate == true) {
-      _formKey.currentState?.save(); // Form alanlarını kaydet
-      debugPrint("email $_email şifre $_sifre");
+    try {
+      if (_validate) {
+        _formKey.currentState?.save(); // Form alanlarını kaydet
+        debugPrint("email $_email şifre $_sifre");
 
-      try {
-        // Firebase Authentication kullanarak kullanıcı oluştur
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _email,
-          password: _sifre,
-        );
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EmailAktivasyon(
-                email: _email,
-              ),
-            ));
+        await _userModel.createUserInWithEmailPassword(
+            _adSoyad, _telefon, _email, _sifre);
 
         // Kullanıcı başarıyla oluşturulduğunda devam edilecek işlemler buraya yazılabilir
-      } catch (e) {
-        // Eğer hata bir FirebaseAuthException ise ve e-posta adresi zaten kayıtlıysa
-        if (e is FirebaseAuthException && e.code == 'email-already-in-use') {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              content: Text(
-                'Böyle bir kullanıcı zaten kayıtlı.',
-                style: Sabitler.yaziMorStyle,
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Tamam',
-                    style: Sabitler.yaziMorStyle,
-                  ),
-                ),
-              ],
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EmailAktivasyon(
+              email: _email,
             ),
-          );
-        } else {
-          // Diğer hataları işle
-          print('Hata: $e');
-        }
+          ),
+        );
+      } else {
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(
+              'Lütfen girilen bilgileri kontrol edin.',
+              style: Sabitler.yaziMorStyle,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Tamam',
+                  style: Sabitler.yaziMorStyle,
+                ),
+              ),
+            ],
+          ),
+        );
       }
-    } else {
+    } on FirebaseAuthException catch (e) {
+      debugPrint("widgetdeki create user hata ${Hatalar.goster(e.code)}");
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          content: Text(
-            'Lütfen girilen bilgileri kontrol edin.',
-            style: Sabitler.yaziMorStyle,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(
-                'Tamam',
-                style: Sabitler.yaziMorStyle,
-              ),
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              "Kullanıcı oluşturma hatası!",
+              style: Sabitler.hataBaslikStyle,
             ),
-          ],
-        ),
+            content: Text(
+              "${Hatalar.goster(e.code)}",
+              style: Sabitler.yaziMorStyle,
+            ),
+            actions: [
+              TextButton(
+                child: Text(
+                  "Tamam",
+                  style: Sabitler.yaziMorStyle,
+                ),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          );
+        },
       );
     }
   }
@@ -204,7 +211,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   validator: (value) {
                                 if (value!.length < 6) {
                                   return "Şifre en az 6 karakter olmalı";
-                                } else if (_girilenSifreKontrol != value!) {
+                                } else if (_girilenSifreKontrol != value) {
                                   debugPrint("$_girilenSifreKontrol ve $value");
                                   return "Şifreler birbirleriyle uyuşmuyor";
                                 }
@@ -238,7 +245,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                 ),
               )
-            : Center(child: CircularProgressIndicator()));
+            : const Center(child: CircularProgressIndicator()));
   }
 
   TextFormField formAlaniSifre(TextInputType keyboardType, IconData icon,
@@ -268,7 +275,7 @@ class _RegisterPageState extends State<RegisterPage> {
       onSaved: onSaved,
       onChanged: (value) {
         setState(() {
-          _girilenSifreKontrol = value!;
+          _girilenSifreKontrol = value;
         });
       },
       validator: validator,

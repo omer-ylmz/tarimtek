@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/firebase_options.dart';
 import 'package:tarimtek/locator/locator.dart';
-import 'package:tarimtek/pages/landing_page.dart';
+import 'package:tarimtek/pages/landing/landing_page.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 void main() async {

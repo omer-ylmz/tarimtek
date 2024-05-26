@@ -14,6 +14,9 @@ class Sabitler {
   static final TextStyle baslikStyle = GoogleFonts.quicksand(
       fontSize: 30, fontWeight: FontWeight.w900, color: anaRenk);
 
+  static final TextStyle hataBaslikStyle = GoogleFonts.quicksand(
+      fontSize: 20, fontWeight: FontWeight.w900, color: anaRenk);
+
   static final TextStyle yaziMorStyle = GoogleFonts.quicksand(
       fontSize: 16, fontWeight: FontWeight.w700, color: anaRenk);
 

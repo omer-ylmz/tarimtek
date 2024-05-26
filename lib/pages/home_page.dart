@@ -1,15 +1,25 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tarimtek/model/user_model.dart';
-import 'package:tarimtek/viewmodel/user_model.dart';
+import 'package:tarimtek/constants/text_style.dart';
+import 'package:tarimtek/locator/locator.dart';
+import 'package:tarimtek/model/user.dart';
+import 'package:tarimtek/pages/ornek_sayfa1.dart';
+import 'package:tarimtek/services/firestore_db_service.dart';
 
-// ignore: must_be_immutable
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final AppUser user;
+  const HomePage({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
-  const HomePage({super.key, required this.user});
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final FirestoreDBService _firestoreDBService = locator<FirestoreDBService>();
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +29,15 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: FloatingActionButton(
-              onPressed: () => _cikisYap(context),
-              child: const Text(
-                "Çıkış Yap",
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OrnekSayfa1(),
+                  )),
+              child: Text(
+                "Çıkış",
                 textAlign: TextAlign.center,
+                style: Sabitler.yaziMorStyle,
               ),
             ),
           )
@@ -30,14 +45,15 @@ class HomePage extends StatelessWidget {
         title: const Text("Ana Sayfa"),
       ),
       body: Center(
-        child: Text("Hoşgeldiniz ${user.userId}"),
+        child: ElevatedButton(
+            onPressed: () async {
+              AppUser? deneme =
+                  await _firestoreDBService.readUser(widget.user.userId);
+              print("user id" + widget.user.userId);
+              print("dbden gelen" + deneme.toString());
+            },
+            child: Text("get data")),
       ),
     );
-  }
-
-  Future<bool> _cikisYap(BuildContext context) async {
-    final _userModel = Provider.of<UserModel>(context, listen: false);
-    bool sonuc = await _userModel.signOut();
-    return sonuc;
   }
 }

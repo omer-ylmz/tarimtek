@@ -1,5 +1,7 @@
+// ignore_for_file: body_might_complete_normally_nullable, no_leading_underscores_for_local_identifiers
+
 import 'package:tarimtek/locator/locator.dart';
-import 'package:tarimtek/model/user_model.dart';
+import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/services/auth_base.dart';
 import 'package:tarimtek/services/fake_auth_service.dart';
 import 'package:tarimtek/services/firebase_auth_service.dart';
@@ -51,7 +53,7 @@ class UserRepository implements AuthBase {
 
       bool? _sonuc = await _firestoreDBService.saveUser(_user!);
       if (_sonuc == true) {
-        return _user;
+        return await _firestoreDBService.readUser(_user.userId);
       } else {
         return null;
       }
@@ -73,12 +75,12 @@ class UserRepository implements AuthBase {
           adSoyad, numara, email, sifre);
       if (_user != null) {
         // _user değişkeni null değilse, işlemleri yap
-        _user.phoneNumber = numara ?? "";
-        _user.userName = adSoyad ?? "";
+        _user.phoneNumber = numara;
+        _user.userName = adSoyad;
 
         bool? _sonuc = await _firestoreDBService.saveUser(_user);
         if (_sonuc == true) {
-          return _user;
+          return await _firestoreDBService.readUser(_user.userId);
         }
       }
     }
@@ -89,7 +91,11 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.debug) {
       return await _fakeAuthentication.signInWithEmailPassword(email, sifre);
     } else {
-      return await _firebaseAuthService.signInWithEmailPassword(email, sifre);
+    
+        AppUser? _user =
+            await _firebaseAuthService.signInWithEmailPassword(email, sifre);
+        return _firestoreDBService.readUser(_user!.userId);
+      
     }
   }
 

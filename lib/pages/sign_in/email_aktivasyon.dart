@@ -1,8 +1,9 @@
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:tarimtek/pages/sign_in/sign_in_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tarimtek/constants/text_style.dart';
-import 'package:tarimtek/pages/sign_in/register_page.dart';
 
 class EmailAktivasyon extends StatefulWidget {
   final String email;
@@ -24,7 +25,7 @@ class _EmailAktivasyonState extends State<EmailAktivasyon> {
     } else {
       // Email uygulaması açılamıyorsa kullanıcıya bir mesaj gösterilebilir
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Email uygulaması açılamadı.')),
+        const SnackBar(content: Text('Email uygulaması açılamadı.')),
       );
     }
   }
@@ -41,20 +42,20 @@ class _EmailAktivasyonState extends State<EmailAktivasyon> {
               'Email\'ini Kontrol Et',
               style: Sabitler.baslikStyle,
             ),
-            SizedBox(height: 20), // Boşluk eklemek için
+            const SizedBox(height: 20), // Boşluk eklemek için
             Text(
               "Doğrulama bağlantısını ${widget.email} email adresine gönderdik.",
               style: Sabitler.yaziMorStyle,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20), // Boşluk eklemek için
+            const SizedBox(height: 20), // Boşluk eklemek için
             Padding(
               padding: const EdgeInsets.only(left: 40.0, right: 40.0),
               child: Image.asset(
                 "assets/images/image.png",
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -66,7 +67,7 @@ class _EmailAktivasyonState extends State<EmailAktivasyon> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SignInPage(),
+                      builder: (context) => const SignInPage(),
                     )),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

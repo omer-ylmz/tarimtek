@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
@@ -5,6 +7,8 @@ import 'package:tarimtek/pages/sign_in/sign_in_page.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class ChangePassword extends StatefulWidget {
+  const ChangePassword({super.key});
+
   @override
   State<ChangePassword> createState() => _ChangePasswordState();
 }
@@ -19,7 +23,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       backgroundColor: Sabitler.arkaplan,
       body: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -27,13 +31,13 @@ class _ChangePasswordState extends State<ChangePassword> {
                 "Parolanızı Mı Unuttunuz",
                 style: Sabitler.baslikStyle,
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Text(
                 "Şifrenizi sıfırlamak için kimliği doğrulanabilen e-posta adresinize ihtiyacımız var.",
                 style: Sabitler.yaziMorStyle,
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Padding(
@@ -42,7 +46,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   "assets/images/sifre.JPG",
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Padding(
@@ -52,10 +56,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (newValue) {
                     setState(() {
-                      email = newValue!;
+                      email = newValue;
                     });
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
                     labelText: 'E-posta',
@@ -64,7 +68,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ),
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Padding(
                 padding: const EdgeInsets.only(left: 80, right: 80),
                 child: ElevatedButton(
@@ -92,7 +96,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SignInPage(),
+                        builder: (context) => const SignInPage(),
                       )),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -131,7 +135,7 @@ class _ChangePasswordState extends State<ChangePassword> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
