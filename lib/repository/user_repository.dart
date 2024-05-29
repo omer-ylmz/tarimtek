@@ -1,10 +1,13 @@
 // ignore_for_file: body_might_complete_normally_nullable, no_leading_underscores_for_local_identifiers
 
+import 'dart:io';
+
 import 'package:tarimtek/locator/locator.dart';
 import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/services/auth_base.dart';
 import 'package:tarimtek/services/fake_auth_service.dart';
 import 'package:tarimtek/services/firebase_auth_service.dart';
+import 'package:tarimtek/services/firebase_storage_service.dart';
 import 'package:tarimtek/services/firestore_db_service.dart';
 
 enum AppMode { debug, release }
@@ -14,6 +17,8 @@ class UserRepository implements AuthBase {
       locator<FirebaseAuthService>();
   final FakeAuthentication _fakeAuthentication = locator<FakeAuthentication>();
   final FirestoreDBService _firestoreDBService = locator<FirestoreDBService>();
+  final FirebaseStorageService _firebaseStorageService =
+      locator<FirebaseStorageService>();
 
   AppMode appMode = AppMode.release;
 
@@ -22,7 +27,8 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.debug) {
       return await _fakeAuthentication.currentUser();
     } else {
-      return await _firebaseAuthService.currentUser();
+      AppUser? _user = await _firebaseAuthService.currentUser();
+      return await _firestoreDBService.readUser(_user!.userId);
     }
   }
 
@@ -91,11 +97,9 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.debug) {
       return await _fakeAuthentication.signInWithEmailPassword(email, sifre);
     } else {
-    
-        AppUser? _user =
-            await _firebaseAuthService.signInWithEmailPassword(email, sifre);
-        return _firestoreDBService.readUser(_user!.userId);
-      
+      AppUser? _user =
+          await _firebaseAuthService.signInWithEmailPassword(email, sifre);
+      return _firestoreDBService.readUser(_user!.userId);
     }
   }
 
@@ -105,6 +109,36 @@ class UserRepository implements AuthBase {
       return await _fakeAuthentication.changePassword(email);
     } else {
       return await _firebaseAuthService.changePassword(email);
+    }
+  }
+
+  Future<bool?> updateUserName(String userID, String yeniUserName) async {
+    if (appMode == AppMode.debug) {
+      return false;
+    } else {
+      return await _firestoreDBService.updateUserName(userID, yeniUserName);
+    }
+  }
+
+  Future<bool?> updatePhoneNumber(String userID, String yeniPhoneNumber) async {
+    if (appMode == AppMode.debug) {
+      return false;
+    } else {
+      return await _firestoreDBService.updatePhoneNumber(
+          userID, yeniPhoneNumber);
+    }
+  }
+
+  Future<String?> uploadFile(
+      String userID, String fileType, File? profilFoto) async {
+    if (appMode == AppMode.debug) {
+      return "dosya_indirme_linki";
+    } else {
+      var _profilFotoURL = await _firebaseStorageService.uploadFile(
+          userID, fileType, profilFoto!);
+          await _firestoreDBService.updateProfilFoto(
+          userID, _profilFotoURL);
+      return _profilFotoURL;
     }
   }
 }

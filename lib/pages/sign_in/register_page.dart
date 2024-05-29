@@ -4,6 +4,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tarimtek/common-package/platform_duyarli_alert_dialog.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/exceptions.dart';
 import 'package:tarimtek/locator/locator.dart';
@@ -87,31 +88,11 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       }
     } on FirebaseAuthException catch (e) {
-      debugPrint("widgetdeki create user hata ${Hatalar.goster(e.code)}");
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              "Kullanıcı oluşturma hatası!",
-              style: Sabitler.hataBaslikStyle,
-            ),
-            content: Text(
-              "${Hatalar.goster(e.code)}",
-              style: Sabitler.yaziMorStyle,
-            ),
-            actions: [
-              TextButton(
-                child: Text(
-                  "Tamam",
-                  style: Sabitler.yaziMorStyle,
-                ),
-                onPressed: () => Navigator.pop(context),
-              )
-            ],
-          );
-        },
-      );
+      PlatformDuyarliAlertDialog(
+              baslik: "Kullanıcı Oluşturma Hata!",
+              icerik: "${Hatalar.goster(e.code)}",
+              anaButonYazisi: "Tamam")
+          .goster(context);
     }
   }
 

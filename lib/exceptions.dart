@@ -4,6 +4,9 @@ class Hatalar {
       case "email-already-in-use":
         return "Bu mail adresi zaten kullanımda, lütfen farklı bir mail adresi kullanınız";
 
+      case "invalid-credential":
+        return "Hatalı giriş yaptınız. Bilgileriniz kontrol ediniz";
+
       default:
         return "Bir hata oluştu";
     }

@@ -59,7 +59,31 @@ class FirestoreDBService implements DBBase {
       return null;
     }
   }
+
+  @override
+  Future<bool?> updatePhoneNumber(String userID, String yeniPhoneNumber) async {
+    await _firebaseDB
+        .collection("users")
+        .doc(userID)
+        .update({"phoneNumber": yeniPhoneNumber});
+  }
+
+  @override
+  Future<bool?> updateUserName(String userID, String yeniUserName) async {
+    await _firebaseDB
+        .collection("users")
+        .doc(userID)
+        .update({"userName": yeniUserName});
+  }
+
+  updateProfilFoto(String userID, String? profilFotoURL) async {
+    await _firebaseDB
+        .collection("users")
+        .doc(userID)
+        .update({"profilURL": profilFotoURL});
+  }
 }
+
   // Future<bool> checkEmailExists(String email) async {
   //   // E-posta adresi veritabanında mevcut mu kontrol et
   //   QuerySnapshot querySnapshot = await _firebaseauth.collection("users").where("email", isEqualTo: email).get();

@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:tarimtek/locator/locator.dart';
@@ -115,23 +117,6 @@ class UserModel with ChangeNotifier implements AuthBase {
     }
   }
 
-  bool _emailSifreKontrol(
-    String email,
-    String sifre,
-  ) {
-    var sonuc = true;
-
-    if (sifre.length < 6) {
-      sifreHataMesaji = "En az 6 karakter olmali";
-      sonuc = false;
-    }
-    if (!email.contains("@")) {
-      emailHataMesaji = "Geçersiz email adresi";
-      sonuc = false;
-    }
-    return sonuc;
-  }
-
   @override
   Future<AppUser?> changePassword(String email) async {
     try {
@@ -144,5 +129,30 @@ class UserModel with ChangeNotifier implements AuthBase {
     } finally {
       state = ViewState.idle; // İşlem tamamlandığında ViewState'i güncelle
     }
+  }
+
+  Future<bool?> updateUserName(String userID, String yeniUserName) async {
+    var sonuc = await _userRepository.updateUserName(userID, yeniUserName);
+    if (sonuc == true) {
+      user!.userName = yeniUserName;
+    }
+    return sonuc;
+  }
+
+  Future<bool?> updatePhoneNumber(String userID, String yeniPhoneNumber) async {
+    var sonuc =
+        await _userRepository.updatePhoneNumber(userID, yeniPhoneNumber);
+    if (sonuc == true) {
+      user!.phoneNumber = yeniPhoneNumber;
+    }
+    return sonuc;
+  }
+
+  Future<String?> uploadFile(
+      String userID, String fileType, File? profilFoto) async {
+    var indirmeLinki =
+        await _userRepository.uploadFile(userID, fileType, profilFoto);
+
+    return indirmeLinki;
   }
 }
