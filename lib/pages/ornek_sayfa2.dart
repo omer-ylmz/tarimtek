@@ -12,7 +12,7 @@ class _OrnekSayfa1State extends State<OrnekSayfa2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Ornek Sayfa 2"),
+        title: const Text("Ornek Sayfa 2"),
       ),
     );
   }

@@ -21,7 +21,7 @@ class _OrnekSayfa1State extends State<OrnekSayfa1> {
               onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => OrnekSayfa2(),
+                    builder: (context) => const OrnekSayfa2(),
                   )),
               child: Text(
                 "Çıkış",
@@ -31,7 +31,7 @@ class _OrnekSayfa1State extends State<OrnekSayfa1> {
             ),
           )
         ],
-        title: Text("Ornek Sayfa 1"),
+        title: const Text("Ornek Sayfa 1"),
       ),
     );
   }

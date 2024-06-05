@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,8 +13,9 @@ class PlatformDuyarliAlertDialog extends PlatformDuyarliWidget {
   final String anaButonYazisi;
   final String? iptalButonYazisi;
 
-  PlatformDuyarliAlertDialog(
-      {required this.baslik,
+  //todo bak hata olursa const ekledi
+   const PlatformDuyarliAlertDialog(
+      {super.key, required this.baslik,
       required this.icerik,
       required this.anaButonYazisi,
       this.iptalButonYazisi});

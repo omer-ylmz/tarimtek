@@ -31,4 +31,10 @@ class Sabitler {
 
   static final TextStyle digerStyle =
       GoogleFonts.quicksand(fontSize: 14, fontWeight: FontWeight.w700);
+
+  static final TextStyle yaziStyleBeyaz = GoogleFonts.quicksand(
+      fontSize: 24, fontWeight: FontWeight.w700, color: Colors.white);
+
+  static final TextStyle yaziStyleSiyah = GoogleFonts.quicksand(
+      fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black);
 }

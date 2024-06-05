@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, body_might_complete_normally_nullable, use_key_in_widget_constructors, no_leading_underscores_for_local_identifiers, avoid_print
+// ignore_for_file: unused_field, body_might_complete_normally_nullable, use_key_in_widget_constructors, no_leading_underscores_for_local_identifiers, avoid_print, unused_element, use_build_context_synchronously
 
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,11 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:tarimtek/common-package/platform_duyarli_alert_dialog.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/exceptions.dart';
-import 'package:tarimtek/locator/locator.dart';
 import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/pages/sign_in/email_aktivasyon.dart';
-import 'package:tarimtek/services/firebase_auth_service.dart';
-import 'package:tarimtek/services/firestore_db_service.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class RegisterPage extends StatefulWidget {

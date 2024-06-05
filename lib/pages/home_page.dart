@@ -1,5 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first, prefer_interpolation_to_compose_strings, avoid_print
 import 'package:flutter/material.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/locator/locator.dart';
@@ -10,9 +9,9 @@ import 'package:tarimtek/services/firestore_db_service.dart';
 class HomePage extends StatefulWidget {
   final AppUser user;
   const HomePage({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -32,7 +31,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => OrnekSayfa1(),
+                    builder: (context) => const OrnekSayfa1(),
                   )),
               child: Text(
                 "Çıkış",
@@ -52,7 +51,7 @@ class _HomePageState extends State<HomePage> {
               print("user id" + widget.user.userId);
               print("dbden gelen" + deneme.toString());
             },
-            child: Text("get data")),
+            child: const Text("get data")),
       ),
     );
   }

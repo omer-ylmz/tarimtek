@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, prefer_final_fields, no_leading_underscores_for_local_identifiers, avoid_print, use_build_context_synchronously
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,6 +9,8 @@ import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
@@ -71,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
-            child: Container(
+            child: SizedBox(
               width: 80,
               child: FloatingActionButton(
                 onPressed: () {
@@ -99,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           )
         ],
-        title: Text("Profil"),
+        title: const Text("Profil"),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -113,21 +117,21 @@ class _ProfilePageState extends State<ProfilePage> {
                           showModalBottomSheet(
                             context: context,
                             builder: (context) {
-                              return Container(
+                              return SizedBox(
                                 height: 160,
                                 child: Column(
                                   children: [
                                     ListTile(
-                                      leading: Icon(Icons.camera),
-                                      title: Text("Kameradan Çek"),
+                                      leading: const Icon(Icons.camera),
+                                      title: const Text("Kameradan Çek"),
                                       onTap: () {
                                         Navigator.pop(context);
                                         _kameradanFotoCek();
                                       },
                                     ),
                                     ListTile(
-                                      leading: Icon(Icons.image),
-                                      title: Text("Galeriden Seç"),
+                                      leading: const Icon(Icons.image),
+                                      title: const Text("Galeriden Seç"),
                                       onTap: () {
                                         Navigator.pop(context);
                                         _galeridenResimCek();
@@ -157,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: TextFormField(
                     controller: _controllerUserName,
                     readOnly: !duzenleModu,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       label: Text("Adınız"),
@@ -173,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: TextFormField(
                     initialValue: _userModel.user!.email,
                     readOnly: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       label: Text("Emailiniz"),
@@ -189,7 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: TextFormField(
                     controller: _controllerPhoneNumber,
                     readOnly: !duzenleModu,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       label: Text("Telefon Numaranız"),
@@ -212,7 +216,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             duzenleModu = false;
                           });
                         },
-                        child: Text("Değişiklikleri Kaydet"),
+                        child: const Text("Değişiklikleri Kaydet"),
                       ),
                     ),
                     Padding(
@@ -223,7 +227,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             duzenleModu = false;
                           });
                         },
-                        child: Text("İptal"),
+                        child: const Text("İptal"),
                       ),
                     ),
                   ],
@@ -236,7 +240,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future _cikisIcinOnayIste(BuildContext context) async {
-    final sonuc = await PlatformDuyarliAlertDialog(
+    final sonuc = await const PlatformDuyarliAlertDialog(
       baslik: "Emin Misiniz?",
       icerik: "Çıkmak istediğinizden emin misiniz?",
       anaButonYazisi: "Evet",
@@ -266,8 +270,15 @@ class _ProfilePageState extends State<ProfilePage> {
   void _profilFotoUpdated(BuildContext context) async {
     final _userModel = Provider.of<UserModel>(context, listen: false);
     if (_profilFoto != null) {
-    var url =  await _userModel.uploadFile(
+      var url = await _userModel.uploadFile(
           _userModel.user!.userId, "profil_foto", _profilFoto);
+      if (url != null) {
+        await const PlatformDuyarliAlertDialog(
+          baslik: "Başarılı",
+          icerik: "Profil fotoğrafınız güncellendi.",
+          anaButonYazisi: "Tamam",
+        ).goster(context);
+      }
     }
   }
 }

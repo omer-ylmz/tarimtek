@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:tarimtek/locator/locator.dart';
+import 'package:tarimtek/model/mesaj.dart';
 import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/repository/user_repository.dart';
 import 'package:tarimtek/services/auth_base.dart';
@@ -154,5 +155,19 @@ class UserModel with ChangeNotifier implements AuthBase {
         await _userRepository.uploadFile(userID, fileType, profilFoto);
 
     return indirmeLinki;
+  }
+
+  Future<List<AppUser>?> getAllUser() async {
+    var tumKullaniciListesi = await _userRepository.getAllUser();
+    return tumKullaniciListesi;
+  }
+
+  Stream<List<Mesaj>?> getMessages(
+      String currentUserID, String sohbetEdilenUserID) {
+    return _userRepository.getMessages(currentUserID, sohbetEdilenUserID);
+  }
+
+  Future<bool?> saveMessages(Mesaj kaydedilecekMesaj) {
+    return _userRepository.saveMessage(kaydedilecekMesaj);
   }
 }

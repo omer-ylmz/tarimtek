@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:tarimtek/locator/locator.dart';
+import 'package:tarimtek/model/mesaj.dart';
 import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/services/auth_base.dart';
 import 'package:tarimtek/services/fake_auth_service.dart';
@@ -136,9 +137,35 @@ class UserRepository implements AuthBase {
     } else {
       var _profilFotoURL = await _firebaseStorageService.uploadFile(
           userID, fileType, profilFoto!);
-          await _firestoreDBService.updateProfilFoto(
-          userID, _profilFotoURL);
+      await _firestoreDBService.updateProfilFoto(userID, _profilFotoURL);
       return _profilFotoURL;
+    }
+  }
+
+  Future<List<AppUser>?> getAllUser() async {
+    if (appMode == AppMode.debug) {
+      return [];
+    } else {
+      var tumKullaniciListesi = await _firestoreDBService.getAllUsers();
+      return tumKullaniciListesi;
+    }
+  }
+
+  Stream<List<Mesaj>?> getMessages(
+      String currentUserID, String sohbetEdilenUserID) {
+    if (appMode == AppMode.debug) {
+      // ignore: prefer_const_constructors
+      return Stream.empty();
+    } else {
+      return _firestoreDBService.getMessages(currentUserID, sohbetEdilenUserID);
+    }
+  }
+
+  Future<bool?> saveMessage(Mesaj kaydedilecekMesaj) async{
+    if (appMode == AppMode.debug) {
+      return Future.value(true);
+    } else {
+      return _firestoreDBService.saveMessage(kaydedilecekMesaj);
     }
   }
 }

@@ -34,7 +34,7 @@ class MyCustomNavigaton extends StatelessWidget {
             if (sayfa != null) {
               return sayfa;
             } else {
-              return Center(
+              return const Center(
                   child: Text('Sayfa bulunamadı')); // Varsayılan widget
             }
           },

@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, no_leading_underscores_for_local_identifiers, unused_element
+// ignore_for_file: public_member_api_docs, sort_constructors_first, no_leading_underscores_for_local_identifiers, unused_element, prefer_interpolation_to_compose_strings
 // ignore_for_file: unused_field, unnecessary_import
 
 import 'package:email_validator/email_validator.dart';

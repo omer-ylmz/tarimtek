@@ -1,6 +1,7 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_interpolation_to_compose_strings, avoid_print
+// ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_interpolation_to_compose_strings, avoid_print, body_might_complete_normally_nullable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tarimtek/model/mesaj.dart';
 import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/services/database_base.dart';
 
@@ -24,6 +25,7 @@ class FirestoreDBService implements DBBase {
     return true;
   }
 
+  @override
   Future<AppUser?> readUser(String userID) async {
     try {
       // "users" koleksiyonuna referans alıyoruz
@@ -76,17 +78,78 @@ class FirestoreDBService implements DBBase {
         .update({"userName": yeniUserName});
   }
 
-  updateProfilFoto(String userID, String? profilFotoURL) async {
+  @override
+  Future<bool?> updateProfilFoto(String userID, String? profilFotoURL) async {
     await _firebaseDB
         .collection("users")
         .doc(userID)
         .update({"profilURL": profilFotoURL});
   }
-}
 
-  // Future<bool> checkEmailExists(String email) async {
-  //   // E-posta adresi veritabanında mevcut mu kontrol et
-  //   QuerySnapshot querySnapshot = await _firebaseauth.collection("users").where("email", isEqualTo: email).get();
-  //   return querySnapshot.docs.isNotEmpty;
+  @override
+  Future<List<AppUser>?> getAllUsers() async {
+    QuerySnapshot querySnapshot = await _firebaseDB.collection("users").get();
+    List<AppUser> users = [];
+
+    for (DocumentSnapshot tekUser in querySnapshot.docs) {
+      Map<String, dynamic> userData = tekUser.data() as Map<String, dynamic>;
+      AppUser _tekUser = AppUser.fromMap(userData);
+      users.add(_tekUser);
+    }
+
+    return users;
+  }
+
+  // Stream<Mesaj> getMessage(String currentUserID, String konusulanUserID) {
+  //   var snapShot = _firebaseDB
+  //       .collection("konusmalar")
+  //       .doc(currentUserID + "--" + konusulanUserID)
+  //       .collection("mesajlar")
+  //       .doc(currentUserID)
+  //       .snapshots();
+
+  //   return snapShot.map((snapShot) => Mesaj.fromMap(snapShot.data()!));
   // }
 
+  @override
+  Stream<List<Mesaj>?> getMessages(
+      String currentUserID, String konusulanUserID) {
+    var snapShot = _firebaseDB
+        .collection("konusmalar")
+        .doc(currentUserID + "--" + konusulanUserID)
+        .collection("mesajlar")
+        .orderBy("date")
+        .snapshots();
+    return snapShot.map((mesajListesi) =>
+        mesajListesi.docs.map((mesaj) => Mesaj.fromMap(mesaj.data())).toList());
+  }
+
+  @override
+  Future<bool?> saveMessage(Mesaj kaydedilecekMesaj) async {
+    var _mesajID = _firebaseDB.collection("konusmalar").doc().id;
+    var _myDocumentID =
+        kaydedilecekMesaj.kimden + "--" + kaydedilecekMesaj.kime;
+    var _receiverDocumentID =
+        kaydedilecekMesaj.kime + "--" + kaydedilecekMesaj.kimden;
+
+    var _kaydedilecekMesajYapisi = kaydedilecekMesaj.toMap();
+
+    await _firebaseDB
+        .collection("konusmalar")
+        .doc(_myDocumentID)
+        .collection("mesajlar")
+        .doc(_mesajID)
+        .set(_kaydedilecekMesajYapisi);
+
+    _kaydedilecekMesajYapisi.update("bendenMi", (value) => false);
+
+    await _firebaseDB
+        .collection("konusmalar")
+        .doc(_receiverDocumentID)
+        .collection("mesajlar")
+        .doc(_mesajID)
+        .set(_kaydedilecekMesajYapisi);
+
+    return true;
+  }
+}
