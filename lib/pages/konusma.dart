@@ -1,6 +1,10 @@
-// ignore_for_file: prefer_final_fields, no_leading_underscores_for_local_identifiers
+// ignore: depend_on_referenced_packages, implementation_imports
+// ignore_for_file: no_leading_underscores_for_local_identifiers
 
+// ignore: depend_on_referenced_packages, implementation_imports
+import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/model/mesaj.dart';
@@ -18,7 +22,8 @@ class Konusma extends StatefulWidget {
 }
 
 class _KonusmaState extends State<Konusma> {
-  var _mesajController = TextEditingController();
+  final _mesajController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +54,11 @@ class _KonusmaState extends State<Konusma> {
                 }
                 var tumMesajlar = streamMesajlarListesi.data;
                 return ListView.builder(
+                  reverse: true,
+                  controller: _scrollController,
                   itemCount: tumMesajlar!.length,
                   itemBuilder: (context, index) {
-                    return Text(tumMesajlar[index].mesaj);
+                    return _konusmaBalonuOlustur(tumMesajlar[index]);
                   },
                 );
               },
@@ -95,6 +102,9 @@ class _KonusmaState extends State<Konusma> {
                               await _userModel.saveMessages(_kaydedilecekMesaj);
                           if (sonuc == true) {
                             _mesajController.clear();
+                            _scrollController.animateTo(0.0,
+                                duration: const Duration(milliseconds: 10),
+                                curve: Curves.easeOut);
                           }
                         }
                       },
@@ -107,5 +117,75 @@ class _KonusmaState extends State<Konusma> {
         ),
       ),
     );
+  }
+
+  Widget _konusmaBalonuOlustur(Mesaj oAnkiMesaj) {
+    var _benimMesajimMi = oAnkiMesaj.bendenMi;
+    var _saatDakikaDegeri = "";
+
+    try {
+      _saatDakikaDegeri = _saatDakikaGoster(oAnkiMesaj.date);
+      // ignore: empty_catches
+    } catch (e) {}
+
+    if (_benimMesajimMi) {
+      return Padding(
+        padding: const EdgeInsets.all(4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Sabitler.ikinciRenk),
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(4),
+              child: Text(
+                oAnkiMesaj.mesaj,
+                style: Sabitler.yaziMorStyle,
+              ),
+            ),
+            Text(_saatDakikaDegeri)
+          ],
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage:
+                      NetworkImage(widget.sohbetEdilenUser.profilURL!),
+                ),
+                Flexible(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Sabitler.ikinciRenk),
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(4),
+                    child: Text(
+                      oAnkiMesaj.mesaj,
+                      style: Sabitler.yaziMorStyle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Text(_saatDakikaDegeri)
+          ],
+        ),
+      );
+    }
+  }
+
+  String _saatDakikaGoster(Timestamp? date) {
+    var _formatter = DateFormat.Hm();
+    var _formatlanmisTarih = _formatter.format(date!.toDate());
+    return _formatlanmisTarih;
   }
 }

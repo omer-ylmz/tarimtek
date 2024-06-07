@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_interpolation_to_compose_strings, avoid_print, body_might_complete_normally_nullable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tarimtek/model/konusma.dart';
 import 'package:tarimtek/model/mesaj.dart';
 import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/services/database_base.dart';
@@ -118,7 +119,7 @@ class FirestoreDBService implements DBBase {
         .collection("konusmalar")
         .doc(currentUserID + "--" + konusulanUserID)
         .collection("mesajlar")
-        .orderBy("date")
+        .orderBy("date", descending: true)
         .snapshots();
     return snapShot.map((mesajListesi) =>
         mesajListesi.docs.map((mesaj) => Mesaj.fromMap(mesaj.data())).toList());
@@ -141,6 +142,14 @@ class FirestoreDBService implements DBBase {
         .doc(_mesajID)
         .set(_kaydedilecekMesajYapisi);
 
+    await _firebaseDB.collection("konusmalar").doc(_myDocumentID).set({
+      "konusma_sahibi": kaydedilecekMesaj.kimden,
+      "kimle_konusuyor": kaydedilecekMesaj.kime,
+      "son_yollanan_mesaj": kaydedilecekMesaj.mesaj,
+      "konusma_goruldu": false,
+      "olusturulma_tarihi": FieldValue.serverTimestamp()
+    });
+
     _kaydedilecekMesajYapisi.update("bendenMi", (value) => false);
 
     await _firebaseDB
@@ -150,6 +159,30 @@ class FirestoreDBService implements DBBase {
         .doc(_mesajID)
         .set(_kaydedilecekMesajYapisi);
 
+    await _firebaseDB.collection("konusmalar").doc(_receiverDocumentID).set({
+      "konusma_sahibi": kaydedilecekMesaj.kime,
+      "kimle_konusuyor": kaydedilecekMesaj.kimden,
+      "son_yollanan_mesaj": kaydedilecekMesaj.mesaj,
+      "konusma_goruldu": false,
+      "olusturulma_tarihi": FieldValue.serverTimestamp()
+    });
+
     return true;
+  }
+
+  @override
+  Future<List<Konusma>?> getAllConversations(String userID) async {
+    QuerySnapshot querySnapshot = await _firebaseDB
+        .collection("konusmalar")
+        .where("konusma_sahibi", isEqualTo: userID)
+        .orderBy("olusturulma_tarihi", descending: true)
+        .get();
+    List<Konusma> tumKonusmalar = [];
+    for (DocumentSnapshot tekKonusma in querySnapshot.docs) {
+      Konusma _tekKonusma =
+          Konusma.fromMap(tekKonusma.data() as Map<String, dynamic>);
+      tumKonusmalar.add(_tekKonusma);
+    }
+    return tumKonusmalar;
   }
 }

@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:tarimtek/locator/locator.dart';
+import 'package:tarimtek/model/konusma.dart';
 import 'package:tarimtek/model/mesaj.dart';
 import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/services/auth_base.dart';
@@ -166,6 +167,14 @@ class UserRepository implements AuthBase {
       return Future.value(true);
     } else {
       return _firestoreDBService.saveMessage(kaydedilecekMesaj);
+    }
+  }
+
+  Future<List<Konusma>?> getAllConversations(String userID) async{
+    if (appMode == AppMode.debug) {
+      return null;
+    } else {
+      return _firestoreDBService.getAllConversations(userID);
     }
   }
 }

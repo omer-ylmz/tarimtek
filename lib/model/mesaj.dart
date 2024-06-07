@@ -5,7 +5,7 @@ class Mesaj {
   final String kime;
   final bool bendenMi;
   final String mesaj;
-  DateTime? date;
+  Timestamp? date;
 
   Mesaj(
       {required this.kimden,
@@ -30,7 +30,7 @@ class Mesaj {
       kime: map["kime"],
       bendenMi: map["bendenMi"],
       mesaj: map["mesaj"],
-      date: (map["date"] as Timestamp?)!.toDate(),
+      date: map["date"],
     );
   }
 

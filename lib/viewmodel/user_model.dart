@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:tarimtek/locator/locator.dart';
+import 'package:tarimtek/model/konusma.dart';
 import 'package:tarimtek/model/mesaj.dart';
 import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/repository/user_repository.dart';
@@ -167,7 +168,11 @@ class UserModel with ChangeNotifier implements AuthBase {
     return _userRepository.getMessages(currentUserID, sohbetEdilenUserID);
   }
 
-  Future<bool?> saveMessages(Mesaj kaydedilecekMesaj) {
-    return _userRepository.saveMessage(kaydedilecekMesaj);
+  Future<bool?> saveMessages(Mesaj kaydedilecekMesaj) async{
+    return await _userRepository.saveMessage(kaydedilecekMesaj);
+  }
+
+  Future<List<Konusma>?> getAllConversations(String userID) async{
+    return await _userRepository.getAllConversations(userID);
   }
 }
