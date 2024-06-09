@@ -25,7 +25,8 @@ class AppUser {
       "email": email ?? "",
       "userName": userName ?? "",
       "phoneNumber": phoneNumber ?? "",
-      "profilURL": profilURL ?? "",
+      "profilURL": profilURL ??
+          "https://www.pngall.com/wp-content/uploads/5/Profile-Avatar-PNG-Free-Download.png",
       "createdAt": createdAt ?? FieldValue.serverTimestamp(),
       "updatedAt": updatedAt ?? FieldValue.serverTimestamp(),
     };
@@ -42,6 +43,11 @@ class AppUser {
       updatedAt: (map["updatedAt"] as Timestamp?)?.toDate(),
     );
   }
+
+  AppUser.idveResim({
+    required this.userId,
+    required this.profilURL,
+  });
 
   @override
   String toString() {

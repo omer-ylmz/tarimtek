@@ -1,5 +1,5 @@
 // ignore: depend_on_referenced_packages, implementation_imports
-// ignore_for_file: no_leading_underscores_for_local_identifiers
+// ignore_for_file: no_leading_underscores_for_local_identifiers, non_constant_identifier_names
 
 // ignore: depend_on_referenced_packages, implementation_imports
 import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
@@ -11,17 +11,21 @@ import 'package:tarimtek/model/mesaj.dart';
 import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
-class Konusma extends StatefulWidget {
+class KonusmaPage extends StatefulWidget {
   final AppUser currentUser;
   final AppUser sohbetEdilenUser;
-  const Konusma(
-      {super.key, required this.currentUser, required this.sohbetEdilenUser});
+  String? userName;
+  KonusmaPage(
+      {super.key,
+      required this.currentUser,
+      required this.sohbetEdilenUser,
+      this.userName});
 
   @override
-  State<Konusma> createState() => _KonusmaState();
+  State<KonusmaPage> createState() => _KonusmaPageState();
 }
 
-class _KonusmaState extends State<Konusma> {
+class _KonusmaPageState extends State<KonusmaPage> {
   final _mesajController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
@@ -35,7 +39,7 @@ class _KonusmaState extends State<Konusma> {
       appBar: AppBar(
         backgroundColor: Sabitler.ikinciRenk,
         title: Text(
-          "${widget.sohbetEdilenUser.userName}",
+          "${widget.sohbetEdilenUser.userName ?? widget.userName}",
           style: Sabitler.yaziStyleSiyah,
         ),
       ),
@@ -43,26 +47,57 @@ class _KonusmaState extends State<Konusma> {
         child: Column(
           children: [
             Expanded(
-                child: StreamBuilder(
-              stream: _userModel.getMessages(
-                  _currentUser.userId, _sohbetEdilenUser.userId),
-              builder: (context, streamMesajlarListesi) {
-                if (!streamMesajlarListesi.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                var tumMesajlar = streamMesajlarListesi.data;
-                return ListView.builder(
-                  reverse: true,
-                  controller: _scrollController,
-                  itemCount: tumMesajlar!.length,
-                  itemBuilder: (context, index) {
-                    return _konusmaBalonuOlustur(tumMesajlar[index]);
-                  },
-                );
-              },
-            )),
+              child: StreamBuilder(
+                stream: _userModel.getMessages(
+                    _currentUser.userId, _sohbetEdilenUser.userId),
+                builder: (context, streamMesajlarListesi) {
+                  if (!streamMesajlarListesi.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  var tumMesajlar = streamMesajlarListesi.data;
+                  if (tumMesajlar!.isNotEmpty) {
+                    return ListView.builder(
+                      reverse: true,
+                      controller: _scrollController,
+                      itemCount: tumMesajlar.length,
+                      itemBuilder: (context, index) {
+                        return _KonusmaPagePageBalonuOlustur(
+                            tumMesajlar[index]);
+                      },
+                    );
+                  } else {
+                    return RefreshIndicator(
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height - 150,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.chat,
+                                  color: Sabitler.ikinciRenk,
+                                  size: 80,
+                                ),
+                                Text(
+                                  "Henüz Konuşma Yok",
+                                  style: Sabitler.yaziMorStyle,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      onRefresh: () => _konusmalarimListesiniYenile(),
+                    );
+                  }
+                },
+              ),
+            ),
             Container(
               padding: const EdgeInsets.only(bottom: 8, left: 8),
               child: Row(
@@ -119,7 +154,7 @@ class _KonusmaState extends State<Konusma> {
     );
   }
 
-  Widget _konusmaBalonuOlustur(Mesaj oAnkiMesaj) {
+  Widget _KonusmaPagePageBalonuOlustur(Mesaj oAnkiMesaj) {
     var _benimMesajimMi = oAnkiMesaj.bendenMi;
     var _saatDakikaDegeri = "";
 
@@ -187,5 +222,12 @@ class _KonusmaState extends State<Konusma> {
     var _formatter = DateFormat.Hm();
     var _formatlanmisTarih = _formatter.format(date!.toDate());
     return _formatlanmisTarih;
+  }
+
+  Future<Null> _konusmalarimListesiniYenile() async {
+    setState(() {});
+    await Future.delayed(const Duration(seconds: 1));
+
+    return null;
   }
 }

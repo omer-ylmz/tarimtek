@@ -1,4 +1,4 @@
-// ignore_for_file: body_might_complete_normally_nullable, no_leading_underscores_for_local_identifiers
+// ignore_for_file: body_might_complete_normally_nullable, no_leading_underscores_for_local_identifiers, avoid_print
 
 import 'dart:io';
 
@@ -11,6 +11,7 @@ import 'package:tarimtek/services/fake_auth_service.dart';
 import 'package:tarimtek/services/firebase_auth_service.dart';
 import 'package:tarimtek/services/firebase_storage_service.dart';
 import 'package:tarimtek/services/firestore_db_service.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 enum AppMode { debug, release }
 
@@ -21,6 +22,7 @@ class UserRepository implements AuthBase {
   final FirestoreDBService _firestoreDBService = locator<FirestoreDBService>();
   final FirebaseStorageService _firebaseStorageService =
       locator<FirebaseStorageService>();
+  List<AppUser> tumKullaniciListesi = [];
 
   AppMode appMode = AppMode.release;
 
@@ -101,7 +103,7 @@ class UserRepository implements AuthBase {
     } else {
       AppUser? _user =
           await _firebaseAuthService.signInWithEmailPassword(email, sifre);
-      return _firestoreDBService.readUser(_user!.userId);
+      return _firestoreDBService.readUser(_user?.userId);
     }
   }
 
@@ -147,7 +149,8 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.debug) {
       return [];
     } else {
-      var tumKullaniciListesi = await _firestoreDBService.getAllUsers();
+      tumKullaniciListesi = (await _firestoreDBService.getAllUsers())!;
+
       return tumKullaniciListesi;
     }
   }
@@ -162,7 +165,7 @@ class UserRepository implements AuthBase {
     }
   }
 
-  Future<bool?> saveMessage(Mesaj kaydedilecekMesaj) async{
+  Future<bool?> saveMessage(Mesaj kaydedilecekMesaj) async {
     if (appMode == AppMode.debug) {
       return Future.value(true);
     } else {
@@ -170,11 +173,70 @@ class UserRepository implements AuthBase {
     }
   }
 
-  Future<List<Konusma>?> getAllConversations(String userID) async{
+  Future<List<Konusma>?> getAllConversations(String userID) async {
     if (appMode == AppMode.debug) {
       return null;
     } else {
-      return _firestoreDBService.getAllConversations(userID);
+      DateTime? _zaman = await _firestoreDBService.saatiGoster(userID);
+      print("okundu zaman: " +
+          (_zaman?.toString() ?? "null")); // Hata ayıklama çıktısı
+      var konusmaListesi =
+          await _firestoreDBService.getAllConversations(userID);
+      if (konusmaListesi == null) {
+        print("Konuşma listesi null"); // Hata ayıklama çıktısı
+        return null;
+      }
+
+      for (var oAnkiKonusma in konusmaListesi) {
+        var userListesindekiKullanici =
+            listedeKisiBul(oAnkiKonusma.kimle_konusuyor!);
+        if (userListesindekiKullanici != null) {
+          print("veri localden okundu");
+          oAnkiKonusma.konusulanUserName = userListesindekiKullanici.userName;
+          oAnkiKonusma.konusulanUserProfilURL =
+              userListesindekiKullanici.profilURL;
+          oAnkiKonusma.sonOkunmaZamani = _zaman;
+          if (_zaman != null && oAnkiKonusma.olusturulma_tarihi != null) {
+            var _duration =
+                _zaman.difference(oAnkiKonusma.olusturulma_tarihi!.toDate());
+            oAnkiKonusma.aradakiFark =
+                await timeago.format(_zaman.subtract(_duration));
+          } else {
+            print(
+                "Zaman veya oluşturulma tarihi null"); // Hata ayıklama çıktısı
+          }
+        } else {
+          print("veri dbden okundu");
+          var _dbdenOkunanUser =
+              await _firestoreDBService.readUser(oAnkiKonusma.kimle_konusuyor!);
+          if (_dbdenOkunanUser != null) {
+            oAnkiKonusma.konusulanUserName = _dbdenOkunanUser.userName;
+            oAnkiKonusma.konusulanUserProfilURL = _dbdenOkunanUser.profilURL;
+            oAnkiKonusma.sonOkunmaZamani = _zaman;
+            if (_zaman != null && oAnkiKonusma.olusturulma_tarihi != null) {
+              var _duration =
+                  _zaman.difference(oAnkiKonusma.olusturulma_tarihi!.toDate());
+              oAnkiKonusma.aradakiFark =
+                  await timeago.format(_zaman.subtract(_duration));
+            } else {
+              print(
+                  "Zaman veya oluşturulma tarihi null"); // Hata ayıklama çıktısı
+            }
+          } else {
+            print("DB'den okunan user null"); // Hata ayıklama çıktısı
+          }
+        }
+      }
+      return konusmaListesi;
     }
+  }
+
+  AppUser? listedeKisiBul(String userID) {
+    for (int i = 0; i < tumKullaniciListesi.length; i++) {
+      if (tumKullaniciListesi[i].userId == userID) {
+        return tumKullaniciListesi[i];
+      }
+    }
+    return null;
   }
 }

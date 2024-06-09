@@ -27,7 +27,7 @@ class FirestoreDBService implements DBBase {
   }
 
   @override
-  Future<AppUser?> readUser(String userID) async {
+  Future<AppUser?> readUser(String? userID) async {
     try {
       // "users" koleksiyonuna referans alıyoruz
       CollectionReference<Map<String, dynamic>> userRef =
@@ -184,5 +184,19 @@ class FirestoreDBService implements DBBase {
       tumKonusmalar.add(_tekKonusma);
     }
     return tumKonusmalar;
+  }
+
+  @override
+  Future<DateTime?> saatiGoster(String userID) async {
+    // Firestore'a sunucu zaman damgasını yaz
+    await _firebaseDB.collection("server").doc(userID).set({
+      "saat": FieldValue.serverTimestamp(),
+    });
+
+    // Sunucu zaman damgasını içeren belgeyi al
+    var okunanMap = await _firebaseDB.collection("server").doc(userID).get();
+
+    // Belgeden zaman damgasını al
+    return okunanMap.data()?["saat"];
   }
 }

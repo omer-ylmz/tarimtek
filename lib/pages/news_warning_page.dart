@@ -4,12 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/model/user.dart';
-import 'package:tarimtek/pages/konusma.dart';
+import 'package:tarimtek/pages/konusma_page.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
-class NewsWarningPage extends StatelessWidget {
+class NewsWarningPage extends StatefulWidget {
   const NewsWarningPage({super.key});
 
+  @override
+  State<NewsWarningPage> createState() => _NewsWarningPageState();
+}
+
+class _NewsWarningPageState extends State<NewsWarningPage> {
   @override
   Widget build(BuildContext context) {
     final _userModel = Provider.of<UserModel>(context, listen: false);
@@ -39,36 +44,59 @@ class NewsWarningPage extends StatelessWidget {
                   (user) => user.userId == _userModel.user!.userId);
 
               if (tumKullanicilar.isNotEmpty) {
-                return ListView.builder(
-                  itemCount: tumKullanicilar.length,
-                  itemBuilder: (context, index) {
-                    var oAnkiUser = tumKullanicilar[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context, rootNavigator: true)
-                            .push(MaterialPageRoute(
-                          builder: (context) => Konusma(
-                            currentUser: _userModel.user!,
-                            sohbetEdilenUser: oAnkiUser,
+                return RefreshIndicator(
+                  onRefresh: _kullanicilarListesiniGuncelle,
+                  child: ListView.builder(
+                    itemCount: tumKullanicilar.length,
+                    itemBuilder: (context, index) {
+                      var oAnkiUser = tumKullanicilar[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context, rootNavigator: true)
+                              .push(MaterialPageRoute(
+                            builder: (context) => KonusmaPage(
+                              currentUser: _userModel.user!,
+                              sohbetEdilenUser: oAnkiUser,
+                            ),
+                          ));
+                        },
+                        child: ListTile(
+                          title: Text(oAnkiUser.userName!),
+                          subtitle: Text(oAnkiUser.email!),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(oAnkiUser.profilURL!),
                           ),
-                        ));
-                      },
-                      child: ListTile(
-                        title: Text(oAnkiUser.userName!),
-                        subtitle: Text(oAnkiUser.email!),
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(oAnkiUser.profilURL!),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 );
               } else {
-                return Center(
-                  child: Text(
-                    "Kayıtlı bir kullanıcı yok",
-                    style: Sabitler.yaziMorStyle,
+                return RefreshIndicator(
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height - 150,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.supervised_user_circle_sharp,
+                              color: Sabitler.ikinciRenk,
+                              size: 80,
+                            ),
+                            Text(
+                              "Henüz Kullanıcı Yok",
+                              style: Sabitler.yaziMorStyle,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
+                  onRefresh: () => _kullanicilarListesiniGuncelle(),
                 );
               }
             } else {
@@ -81,5 +109,12 @@ class NewsWarningPage extends StatelessWidget {
             }
           },
         ));
+  }
+
+  Future<Null> _kullanicilarListesiniGuncelle() async {
+    setState(() {});
+    await Future.delayed(const Duration(seconds: 1));
+
+    return null;
   }
 }

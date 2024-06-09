@@ -9,7 +9,7 @@ import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -149,7 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     radius: 50,
                     backgroundImage: _profilFoto == null
                         ? NetworkImage("${_userModel.user!.profilURL}")
-                            as ImageProvider
+                            as ImageProvider<Object>?
                         : FileImage(_profilFoto!),
                   ),
                 ),
@@ -164,7 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     decoration: const InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      label: Text("Adınız"),
+                      labelText: "Adınız",
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     decoration: const InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      label: Text("Emailiniz"),
+                      labelText: "Emailiniz",
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -196,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     decoration: const InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      label: Text("Telefon Numaranız"),
+                      labelText: "Telefon Numaranız",
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -239,8 +239,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Future _cikisIcinOnayIste(BuildContext context) async {
-    final sonuc = await const PlatformDuyarliAlertDialog(
+  Future<void> _cikisIcinOnayIste(BuildContext context) async {
+    final sonuc = await PlatformDuyarliAlertDialog(
       baslik: "Emin Misiniz?",
       icerik: "Çıkmak istediğinizden emin misiniz?",
       anaButonYazisi: "Evet",
@@ -271,9 +271,9 @@ class _ProfilePageState extends State<ProfilePage> {
     final _userModel = Provider.of<UserModel>(context, listen: false);
     if (_profilFoto != null) {
       var url = await _userModel.uploadFile(
-          _userModel.user!.userId, "profil_foto", _profilFoto);
+          _userModel.user!.userId, "profil_foto", _profilFoto!);
       if (url != null) {
-        await const PlatformDuyarliAlertDialog(
+        await PlatformDuyarliAlertDialog(
           baslik: "Başarılı",
           icerik: "Profil fotoğrafınız güncellendi.",
           anaButonYazisi: "Tamam",
@@ -281,10 +281,10 @@ class _ProfilePageState extends State<ProfilePage> {
       }
     }
   }
-}
 
-Future<bool> _cikisYap(BuildContext context) async {
-  final _userModel = Provider.of<UserModel>(context, listen: false);
-  bool sonuc = await _userModel.signOut();
-  return sonuc;
+  Future<bool> _cikisYap(BuildContext context) async {
+    final _userModel = Provider.of<UserModel>(context, listen: false);
+    bool sonuc = await _userModel.signOut();
+    return sonuc;
+  }
 }
