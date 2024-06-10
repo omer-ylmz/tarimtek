@@ -199,4 +199,34 @@ class FirestoreDBService implements DBBase {
     // Belgeden zaman damgasını al
     return okunanMap.data()?["saat"];
   }
+
+  @override
+  Future<List<AppUser>?> getUserWithPagination(
+      AppUser? enSonGetirilenUser, int getirilecekElemanSayisi) async {
+    // TODO: implement getUserWithPagination
+    late QuerySnapshot _querySnapshot;
+    List<AppUser> tumKullanicilar = [];
+    if (enSonGetirilenUser == null) {
+      _querySnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .orderBy("userName")
+          .limit(getirilecekElemanSayisi)
+          .get();
+    } else {
+      _querySnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .orderBy("userName")
+          .startAfter([enSonGetirilenUser.userName])
+          .limit(getirilecekElemanSayisi)
+          .get();
+      await Future.delayed(Duration(seconds: 1));
+    }
+
+    for (DocumentSnapshot snap in _querySnapshot.docs) {
+      AppUser user = AppUser.fromMap(snap.data() as Map<String, dynamic>);
+
+      tumKullanicilar.add(user);
+    }
+    return tumKullanicilar;
+  }
 }

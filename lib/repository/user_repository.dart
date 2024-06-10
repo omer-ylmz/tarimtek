@@ -239,4 +239,18 @@ class UserRepository implements AuthBase {
     }
     return null;
   }
+
+  Future<List<AppUser>?>? getUserWithPagination(
+      AppUser? enSonGetirilenUser, int sayfadakiGetirilecekElemanSayisi) async {
+    if (appMode == AppMode.debug) {
+      return null;
+    } else {
+      List<AppUser>? _userList =
+          await _firestoreDBService.getUserWithPagination(
+              enSonGetirilenUser, sayfadakiGetirilecekElemanSayisi);
+      tumKullaniciListesi.addAll(_userList!);
+      return _firestoreDBService.getUserWithPagination(
+          enSonGetirilenUser, sayfadakiGetirilecekElemanSayisi);
+    }
+  }
 }

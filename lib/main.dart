@@ -5,6 +5,7 @@ import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/firebase_options.dart';
 import 'package:tarimtek/locator/locator.dart';
 import 'package:tarimtek/pages/landing/landing_page.dart';
+import 'package:tarimtek/viewmodel/all_user_model.dart'; // Yeni eklediğimiz model dosyası
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 void main() async {
@@ -21,8 +22,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => UserModel(),
+    return MultiProvider(
+      // MultiProvider kullandık çünkü birden fazla ChangeNotifierProvider kullanacağız
+      providers: [
+        ChangeNotifierProvider<UserModel>(create: (context) => UserModel()),
+        ChangeNotifierProvider<AllUserModel>(
+            create: (context) =>
+                AllUserModel()), // Yeni eklediğimiz AllUserModel'i burada ekledik
+      ],
       child: MaterialApp(
         title: "TarımTek",
         debugShowCheckedModeBanner: false,

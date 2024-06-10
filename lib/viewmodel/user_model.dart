@@ -168,11 +168,17 @@ class UserModel with ChangeNotifier implements AuthBase {
     return _userRepository.getMessages(currentUserID, sohbetEdilenUserID);
   }
 
-  Future<bool?> saveMessages(Mesaj kaydedilecekMesaj) async{
+  Future<bool?> saveMessages(Mesaj kaydedilecekMesaj) async {
     return await _userRepository.saveMessage(kaydedilecekMesaj);
   }
 
-  Future<List<Konusma>?> getAllConversations(String userID) async{
+  Future<List<Konusma>?> getAllConversations(String userID) async {
     return await _userRepository.getAllConversations(userID);
+  }
+
+  Future<List<AppUser>?> getUserWithPagination(
+      AppUser? enSonGetirilenUser, int sayfadakiGetirilecekElemanSayisi) async {
+    return await _userRepository.getUserWithPagination(
+        enSonGetirilenUser, sayfadakiGetirilecekElemanSayisi);
   }
 }

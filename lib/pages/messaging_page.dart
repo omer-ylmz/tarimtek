@@ -99,14 +99,22 @@ class _MessagingPageState extends State<MessagingPage> {
                                 ),
                               );
                             },
-                            child: ListTile(
-                              title: Text(oAnkiKonusma.konusulanUserName ??
-                                  'Bilinmeyen Kullanıcı'),
-                              subtitle: Text(oAnkiKonusma.son_yollanan_mesaj ??
-                                  'Mesaj yok'),
-                              leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      oAnkiKonusma.konusulanUserProfilURL!)),
+                            child: Card(
+                              child: ListTile(
+                                title: Text(
+                                  oAnkiKonusma.konusulanUserName ??
+                                      'Bilinmeyen Kullanıcı',
+                                  style: Sabitler.yaziStyleSiyahBaslik,
+                                ),
+                                subtitle: Text(
+                                  oAnkiKonusma.son_yollanan_mesaj ??
+                                      'Mesaj yok',
+                                  style: Sabitler.yaziStyleSiyahAltBaslik,
+                                ),
+                                leading: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        oAnkiKonusma.konusulanUserProfilURL!)),
+                              ),
                             ),
                           );
                         }

@@ -37,4 +37,10 @@ class Sabitler {
 
   static final TextStyle yaziStyleSiyah = GoogleFonts.quicksand(
       fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black);
+
+  static final TextStyle yaziStyleSiyahBaslik = GoogleFonts.quicksand(
+      fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black);
+
+  static final TextStyle yaziStyleSiyahAltBaslik = GoogleFonts.quicksand(
+      fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black);
 }
