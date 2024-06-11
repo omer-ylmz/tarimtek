@@ -6,6 +6,7 @@ import 'package:tarimtek/model/konusma.dart';
 import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/pages/konusma_page.dart';
 import 'package:tarimtek/pages/kullanicilar_page.dart';
+import 'package:tarimtek/viewmodel/chat_model.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class MessagingPage extends StatefulWidget {
@@ -87,7 +88,9 @@ class _MessagingPageState extends State<MessagingPage> {
                             onTap: () {
                               Navigator.of(context, rootNavigator: true).push(
                                 MaterialPageRoute(
-                                  builder: (context) => KonusmaPage(
+                                  builder: (context) =>
+                                      ChangeNotifierProvider<ChatModel>(
+                                    create: (context) => ChatModel(
                                       currentUser: _userModel.user!,
                                       userName:
                                           oAnkiKonusma.konusulanUserName ??
@@ -95,7 +98,10 @@ class _MessagingPageState extends State<MessagingPage> {
                                       sohbetEdilenUser: AppUser.idveResim(
                                           userId: oAnkiKonusma.kimle_konusuyor!,
                                           profilURL: oAnkiKonusma
-                                              .konusulanUserProfilURL)),
+                                              .konusulanUserProfilURL),
+                                    ),
+                                    child: KonusmaPage(),
+                                  ),
                                 ),
                               );
                             },

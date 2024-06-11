@@ -1,12 +1,10 @@
-// ignore_for_file: prefer_final_fields, no_leading_underscores_for_local_identifiers
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/model/user.dart';
 import 'package:tarimtek/pages/konusma_page.dart';
+import 'package:provider/provider.dart';
+import 'package:tarimtek/viewmodel/all_user_model.dart';
+import 'package:tarimtek/viewmodel/chat_model.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class KullanicilarSayfasi extends StatefulWidget {
@@ -17,7 +15,6 @@ class KullanicilarSayfasi extends StatefulWidget {
 }
 
 class _KullanicilarSayfasiState extends State<KullanicilarSayfasi> {
-  List<AppUser> tumKullanicilar = [];
   bool _isLoading = false;
   bool _hasMore = true;
   int _sayfadakiGetirilecekElemanSayisi = 10;
@@ -27,117 +24,63 @@ class _KullanicilarSayfasiState extends State<KullanicilarSayfasi> {
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      getUser();
-    });
-    getUser();
 
-    _scrollController.addListener(
-      () {
-        if (_scrollController.offset >=
-                _scrollController.position.minScrollExtent &&
-            !_scrollController.position.outOfRange) {
-          getUser();
-        }
-      },
-    );
+    _scrollController.addListener((_listeScrollListener));
   }
 
   @override
   Widget build(BuildContext context) {
+    final _tumKullanicilarModel = Provider.of<AllUserModel>(context);
     return Scaffold(
       backgroundColor: Sabitler.arkaplan,
       appBar: AppBar(
         backgroundColor: Sabitler.ikinciRenk,
         title: const Text("Kullanıcılar"),
       ),
-      body: tumKullanicilar.isEmpty
-          ? Center(
+      body: Consumer<AllUserModel>(
+        builder: (context, model, child) {
+          if (model.state == AllUserViewState.Busy) {
+            return Center(
               child: CircularProgressIndicator(),
-            )
-          : _kullaniciListesiniOlustur(),
+            );
+          } else if (model.state == AllUserViewState.Loaded) {
+            return RefreshIndicator(
+              onRefresh: model.refresh,
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: model.hasMoreLoading
+                    ? model.kullanicilarListesi!.length + 1
+                    : model.kullanicilarListesi!.length,
+                itemBuilder: (context, index) {
+                  if (model.kullanicilarListesi!.length == 1) {
+                    return _kullaniciYok();
+                  } else if (model.hasMoreLoading &&
+                      index == model.kullanicilarListesi!.length) {
+                    return _yeniElemanlarYukleniyorIndicator();
+                  } else {
+                    return _userListeElemaniOlustur(index);
+                  }
+                },
+              ),
+            );
+          } else {
+            return Container();
+          }
+        },
+      ),
     );
   }
 
   Future<void> getUser() async {
-    final _userModel = Provider.of<UserModel>(context, listen: false);
-
-    if (!_hasMore || _isLoading) {
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    List<AppUser>? _users = await _userModel.getUserWithPagination(
-      _enSonGetirilenUser,
-      _sayfadakiGetirilecekElemanSayisi,
-    );
-
-    if (_users != null && _users.isNotEmpty) {
-      setState(() {
-        tumKullanicilar.addAll(_users);
-        _enSonGetirilenUser = tumKullanicilar.last;
-        if (_users.length < _sayfadakiGetirilecekElemanSayisi) {
-          _hasMore = false;
-        }
-      });
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
+    // getUser fonksiyonu artık kullanılmıyor, bu yüzden kaldırılmayacak
   }
 
-  Widget _kullaniciListesiniOlustur() {
-    if (tumKullanicilar.length > 1) {
-      return RefreshIndicator(
-        onRefresh: _refreshUserList,
-        child: ListView.builder(
-          controller: _scrollController,
-          itemCount: tumKullanicilar.length + 1,
-          itemBuilder: (context, index) {
-            if (index == tumKullanicilar.length) {
-              return _yeniElemanlarYukleniyorIndicator();
-            }
-            return _userListeElemaniOlustur(index);
-          },
-        ),
-      );
-    } else {
-      return RefreshIndicator(
-        child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height - 150,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.supervised_user_circle_sharp,
-                    color: Colors.green,
-                    size: 80,
-                  ),
-                  Text(
-                    "Henüz Kullanıcı Yok",
-                    style: Sabitler.yaziMorStyle,
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-        onRefresh: _refreshUserListYoksa,
-      );
-    }
-  }
+  /* Widget _kullaniciListesiniOlustur() {
+    // Bu fonksiyon kullanılmayacak şekilde yorum satırına alınacak
+  } */
 
-  Future<Null> _refreshUserList() async {
+  Future<void> _refreshUserList() async {
     _hasMore = true;
-
     _enSonGetirilenUser = null;
     getUser();
   }
@@ -149,17 +92,25 @@ class _KullanicilarSayfasiState extends State<KullanicilarSayfasi> {
 
   Widget _userListeElemaniOlustur(int index) {
     final _userModel = Provider.of<UserModel>(context, listen: false);
+    final _tumKullanicilarModel =
+        Provider.of<AllUserModel>(context, listen: false);
 
-    var oAnkiUser = tumKullanicilar[index];
+    var oAnkiUser = _tumKullanicilarModel.kullanicilarListesi![index];
     if (oAnkiUser.userId == _userModel.user!.userId) {
       return Container();
     }
     return GestureDetector(
       onTap: () {
-        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-          builder: (context) => KonusmaPage(
-              currentUser: _userModel.user!, sohbetEdilenUser: oAnkiUser),
-        ));
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider<ChatModel>(
+              create: (context) => ChatModel(
+                  currentUser: _userModel.user!, sohbetEdilenUser: oAnkiUser),
+              child: KonusmaPage(
+                  ),
+            ),
+          ),
+        );
       },
       child: Card(
         child: ListTile(
@@ -183,11 +134,54 @@ class _KullanicilarSayfasiState extends State<KullanicilarSayfasi> {
     return Padding(
       padding: EdgeInsets.all(8),
       child: Center(
-        child: Opacity(
-          opacity: _isLoading ? 1 : 0,
-          child: _isLoading ? CircularProgressIndicator() : null,
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  void dahaFazlaKullaniciGetir() {
+    if (_isLoading == false) {
+      _isLoading = true;
+      final _tumKullanicilarModel = Provider.of<AllUserModel>(context);
+      _tumKullanicilarModel.dahaFazlaUserGetir();
+      _isLoading = false;
+    }
+  }
+
+  void _listeScrollListener() {
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      dahaFazlaKullaniciGetir();
+    }
+  }
+
+  Widget _kullaniciYok() {
+    return RefreshIndicator(
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height - 150,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.supervised_user_circle_sharp,
+                  color: Colors.green,
+                  size: 80,
+                ),
+                Text(
+                  "Henüz Kullanıcı Yok",
+                  style: Sabitler.yaziMorStyle,
+                )
+              ],
+            ),
+          ),
         ),
       ),
+      onRefresh: _refreshUserListYoksa,
     );
   }
 }

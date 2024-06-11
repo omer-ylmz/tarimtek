@@ -8,18 +8,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/model/mesaj.dart';
-import 'package:tarimtek/model/user.dart';
+import 'package:tarimtek/viewmodel/chat_model.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class KonusmaPage extends StatefulWidget {
-  final AppUser currentUser;
-  final AppUser sohbetEdilenUser;
-  String? userName;
-  KonusmaPage(
-      {super.key,
-      required this.currentUser,
-      required this.sohbetEdilenUser,
-      this.userName});
+  KonusmaPage({super.key});
 
   @override
   State<KonusmaPage> createState() => _KonusmaPageState();
@@ -28,135 +21,154 @@ class KonusmaPage extends StatefulWidget {
 class _KonusmaPageState extends State<KonusmaPage> {
   final _mesajController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_listeScrollListener);
+  }
 
   @override
   Widget build(BuildContext context) {
     final _userModel = Provider.of<UserModel>(context);
-    AppUser _currentUser = widget.currentUser;
-    AppUser _sohbetEdilenUser = widget.sohbetEdilenUser;
+    final _chatModel = Provider.of<ChatModel>(context);
     return Scaffold(
       backgroundColor: Sabitler.arkaplan,
       appBar: AppBar(
         backgroundColor: Sabitler.ikinciRenk,
         title: Text(
-          "${widget.sohbetEdilenUser.userName ?? widget.userName}",
+          "${_chatModel.sohbetEdilenUser.userName ?? _chatModel.userName}",
           style: Sabitler.yaziStyleSiyah,
         ),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Expanded(
-              child: StreamBuilder(
-                stream: _userModel.getMessages(
-                    _currentUser.userId, _sohbetEdilenUser.userId),
-                builder: (context, streamMesajlarListesi) {
-                  if (!streamMesajlarListesi.hasData) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  var tumMesajlar = streamMesajlarListesi.data;
-                  if (tumMesajlar!.isNotEmpty) {
-                    return ListView.builder(
-                      reverse: true,
-                      controller: _scrollController,
-                      itemCount: tumMesajlar.length,
-                      itemBuilder: (context, index) {
-                        return _KonusmaPagePageBalonuOlustur(
-                            tumMesajlar[index]);
-                      },
-                    );
-                  } else {
-                    return RefreshIndicator(
-                      child: SingleChildScrollView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height - 150,
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.chat,
-                                  color: Sabitler.ikinciRenk,
-                                  size: 80,
-                                ),
-                                Text(
-                                  "Henüz Konuşma Yok",
-                                  style: Sabitler.yaziMorStyle,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      onRefresh: () => _konusmalarimListesiniYenile(),
-                    );
-                  }
-                },
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(bottom: 8, left: 8),
-              child: Row(
+      body: _chatModel.addListener == ChatViewState.Busy
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Center(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _mesajController,
-                      cursorColor: Sabitler.sariRenk,
-                      style: Sabitler.yaziMorStyle,
-                      decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          hintText: "Mesajınızı Yazın",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none)),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    child: FloatingActionButton(
-                      elevation: 0,
-                      backgroundColor: Sabitler.ikinciRenk,
-                      child: const Icon(
-                        Icons.navigation,
-                        size: 35,
-                        color: Colors.white,
-                      ),
-                      onPressed: () async {
-                        if (_mesajController.text.trim().isNotEmpty) {
-                          Mesaj _kaydedilecekMesaj = Mesaj(
-                              kimden: _currentUser.userId,
-                              kime: _sohbetEdilenUser.userId,
-                              bendenMi: true,
-                              mesaj: _mesajController.text);
-                          var sonuc =
-                              await _userModel.saveMessages(_kaydedilecekMesaj);
-                          if (sonuc == true) {
-                            _mesajController.clear();
-                            _scrollController.animateTo(0.0,
-                                duration: const Duration(milliseconds: 10),
-                                curve: Curves.easeOut);
-                          }
-                        }
-                      },
-                    ),
-                  )
+                  _buildMesajListesi(),
+                  _buildYeniMesajGir(),
                 ],
               ),
             ),
-          ],
-        ),
+    );
+  }
+
+  Widget _buildMesajListesi() {
+    return Consumer<ChatModel>(
+      builder: (context, chatModel, child) {
+        if (chatModel.mesajlarListesi != null) {
+          return Expanded(
+            child: ListView.builder(
+              reverse: true,
+              controller: _scrollController,
+              itemCount: chatModel.hasMoreLoading
+                  ? chatModel.mesajlarListesi!.length + 1
+                  : chatModel.mesajlarListesi!.length,
+              itemBuilder: (context, index) {
+                if (chatModel.hasMoreLoading == true &&
+                    chatModel.mesajlarListesi!.length == index) {
+                  return _yeniElemanlarYukleniyorIndicator();
+                } else {
+                  return _KonusmaBalonuOlustur(
+                      chatModel.mesajlarListesi![index]);
+                }
+              },
+            ),
+          );
+        } else {
+          return RefreshIndicator(
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height - 150,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.chat,
+                        color: Sabitler.ikinciRenk,
+                        size: 80,
+                      ),
+                      Text(
+                        "Henüz Konuşma Yok",
+                        style: Sabitler.yaziMorStyle,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            onRefresh: () => _konusmalarimListesiniYenile(),
+          );
+        }
+      },
+    );
+  }
+
+  Container _buildYeniMesajGir() {
+    final _chatModel = Provider.of<ChatModel>(context);
+    return Container(
+      padding: const EdgeInsets.only(bottom: 8, left: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _mesajController,
+              cursorColor: Sabitler.sariRenk,
+              style: Sabitler.yaziMorStyle,
+              decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  hintText: "Mesajınızı Yazın",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none)),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            child: FloatingActionButton(
+              elevation: 0,
+              backgroundColor: Sabitler.ikinciRenk,
+              child: const Icon(
+                Icons.navigation,
+                size: 35,
+                color: Colors.white,
+              ),
+              onPressed: () async {
+                if (_mesajController.text.trim().isNotEmpty) {
+                  Mesaj _kaydedilecekMesaj = Mesaj(
+                      kimden: _chatModel.currentUser.userId,
+                      kime: _chatModel.sohbetEdilenUser.userId,
+                      bendenMi: true,
+                      mesaj: _mesajController.text);
+                  var sonuc = await _chatModel.saveMessages(_kaydedilecekMesaj);
+                  if (sonuc == true) {
+                    _mesajController.clear();
+                    _scrollController.animateTo(0.0,
+                        duration: const Duration(milliseconds: 10),
+                        curve: Curves.easeOut);
+                  }
+                }
+              },
+            ),
+          )
+        ],
       ),
     );
   }
 
-  Widget _KonusmaPagePageBalonuOlustur(Mesaj oAnkiMesaj) {
+  Widget _KonusmaBalonuOlustur(Mesaj oAnkiMesaj) {
     var _benimMesajimMi = oAnkiMesaj.bendenMi;
     var _saatDakikaDegeri = "";
+    final _chatModel = Provider.of<ChatModel>(context);
 
     try {
       _saatDakikaDegeri = _saatDakikaGoster(oAnkiMesaj.date);
@@ -194,7 +206,7 @@ class _KonusmaPageState extends State<KonusmaPage> {
               children: [
                 CircleAvatar(
                   backgroundImage:
-                      NetworkImage(widget.sohbetEdilenUser.profilURL!),
+                      NetworkImage(_chatModel.sohbetEdilenUser.profilURL!),
                 ),
                 Flexible(
                   child: Container(
@@ -229,5 +241,31 @@ class _KonusmaPageState extends State<KonusmaPage> {
     await Future.delayed(const Duration(seconds: 1));
 
     return null;
+  }
+
+  void _listeScrollListener() {
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      eskiMesajlariGetir();
+    }
+  }
+
+  void eskiMesajlariGetir() async {
+    final _chatModel = Provider.of<ChatModel>(context, listen: false);
+    if (_isLoading == false) {
+      _isLoading = true;
+      await _chatModel.dahaFazlaMesajGetir();
+      _isLoading = false;
+    }
+  }
+
+  Widget _yeniElemanlarYukleniyorIndicator() {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }

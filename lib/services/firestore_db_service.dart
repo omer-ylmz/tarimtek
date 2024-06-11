@@ -120,6 +120,7 @@ class FirestoreDBService implements DBBase {
         .doc(currentUserID + "--" + konusulanUserID)
         .collection("mesajlar")
         .orderBy("date", descending: true)
+        .limit(1)
         .snapshots();
     return snapShot.map((mesajListesi) =>
         mesajListesi.docs.map((mesaj) => Mesaj.fromMap(mesaj.data())).toList());
@@ -228,5 +229,40 @@ class FirestoreDBService implements DBBase {
       tumKullanicilar.add(user);
     }
     return tumKullanicilar;
+  }
+
+  Future<List<Mesaj>>? getMessageWithPagination(
+      String? currentUserID,
+      String? sohberEdilenUserID,
+      int? getirilecekElemanSayisi,
+      Mesaj? enSonGetirilenMesaj) async {
+    late QuerySnapshot _querySnapshot;
+    List<Mesaj> tumMesajlar = [];
+    if (enSonGetirilenMesaj == null) {
+      _querySnapshot = await FirebaseFirestore.instance
+          .collection("konusmalar")
+          .doc(currentUserID! + "--" + sohberEdilenUserID!)
+          .collection("mesajlar")
+          .orderBy("date", descending: true)
+          .limit(getirilecekElemanSayisi!)
+          .get();
+    } else {
+      _querySnapshot = await FirebaseFirestore.instance
+          .collection("konusmalar")
+          .doc(currentUserID! + "--" + sohberEdilenUserID!)
+          .collection("mesajlar")
+          .orderBy("date", descending: true)
+          .startAfter([enSonGetirilenMesaj.date])
+          .limit(getirilecekElemanSayisi!)
+          .get();
+      await Future.delayed(Duration(seconds: 1));
+    }
+
+    for (DocumentSnapshot snap in _querySnapshot.docs) {
+      Mesaj _tekMesaj = Mesaj.fromMap(snap.data() as Map<String, dynamic>);
+
+      tumMesajlar.add(_tekMesaj);
+    }
+    return tumMesajlar;
   }
 }
