@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_interpolation_to_compose_strings, avoid_print, body_might_complete_normally_nullable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tarimtek/model/ilan.dart';
 import 'package:tarimtek/model/konusma.dart';
 import 'package:tarimtek/model/mesaj.dart';
 import 'package:tarimtek/model/user.dart';
@@ -100,17 +101,6 @@ class FirestoreDBService implements DBBase {
 
     return users;
   }
-
-  // Stream<Mesaj> getMessage(String currentUserID, String konusulanUserID) {
-  //   var snapShot = _firebaseDB
-  //       .collection("konusmalar")
-  //       .doc(currentUserID + "--" + konusulanUserID)
-  //       .collection("mesajlar")
-  //       .doc(currentUserID)
-  //       .snapshots();
-
-  //   return snapShot.map((snapShot) => Mesaj.fromMap(snapShot.data()!));
-  // }
 
   @override
   Stream<List<Mesaj>?> getMessages(
@@ -264,5 +254,26 @@ class FirestoreDBService implements DBBase {
       tumMesajlar.add(_tekMesaj);
     }
     return tumMesajlar;
+  }
+
+  @override
+  Future<bool?> saveAdvert(Ilan ilan) async {
+    var _ilanID = _firebaseDB
+        .collection("ilanlar")
+        .doc()
+        .id; // Rastgele ilan ID'si oluştur
+    var _kaydedilecekIlanYapisi = ilan.toMap();
+    await _firebaseDB
+        .collection("ilanlar")
+        .doc(_ilanID)
+        .set(_kaydedilecekIlanYapisi);
+
+    return true;
+  }
+
+  @override
+  Future<List<Ilan>>? getAllAdverts() async {
+    var querySnapshot = await _firebaseDB.collection('ilanlar').get();
+    return querySnapshot.docs.map((doc) => Ilan.fromMap(doc.data())).toList();
   }
 }

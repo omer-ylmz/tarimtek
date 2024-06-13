@@ -14,6 +14,9 @@ class Sabitler {
   static final TextStyle baslikStyle = GoogleFonts.quicksand(
       fontSize: 30, fontWeight: FontWeight.w900, color: anaRenk);
 
+  static final TextStyle baslikStyleKucuk = GoogleFonts.quicksand(
+      fontSize: 24, fontWeight: FontWeight.w900, color: anaRenk);
+
   static final TextStyle hataBaslikStyle = GoogleFonts.quicksand(
       fontSize: 20, fontWeight: FontWeight.w900, color: anaRenk);
 
@@ -43,4 +46,16 @@ class Sabitler {
 
   static final TextStyle yaziStyleSiyahAltBaslik = GoogleFonts.quicksand(
       fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black);
+
+  static final TextStyle ilanBaslikStyle = GoogleFonts.quicksand(
+      fontSize: 20, fontWeight: FontWeight.w700, color: anaRenk);
+
+  static final TextStyle ilanBaslikSecilenStyle = GoogleFonts.quicksand(
+      fontSize: 16, fontWeight: FontWeight.w700, color: sariRenk);
+
+  static final TextStyle modelBottomBaslikStyle = GoogleFonts.quicksand(
+      fontSize: 18, fontWeight: FontWeight.w700, color: anaRenk);
+
+  static final TextStyle modelBottomAltBaslikStyle = GoogleFonts.quicksand(
+      fontSize: 12, fontWeight: FontWeight.w700, color: Colors.black);
 }
