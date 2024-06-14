@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names, prefer_const_declarations
+
 import 'package:flutter/material.dart';
 import 'package:tarimtek/locator/locator.dart';
 import 'package:tarimtek/model/user.dart';
@@ -33,14 +35,14 @@ class AllUserModel with ChangeNotifier {
   //yeni eleman getir true yapılır refresh ve sayfalama için
   getUserWithPagination(
       AppUser? enSonGetirilenUser, bool yeniElemanlarGetiriliyor) async {
-    if (_tumKullanicilar!.length > 0) {
+    if (_tumKullanicilar!.isNotEmpty) {
       _enSonGetirilenUser = _tumKullanicilar!.last;
     }
     if (yeniElemanlarGetiriliyor) {
     } else {
       state = AllUserViewState.Busy;
     }
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     var yeniListe = await _userRepository.getUserWithPagination(
         _enSonGetirilenUser, sayfaBasinaGonderiSayisi);
     if (yeniListe!.length < sayfaBasinaGonderiSayisi) {
@@ -56,7 +58,7 @@ class AllUserModel with ChangeNotifier {
     if (!_hasMore) {
       getUserWithPagination(_enSonGetirilenUser, true);
     }
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
   }
 
   Future<Null> refresh() async {

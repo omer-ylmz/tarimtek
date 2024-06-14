@@ -1,5 +1,5 @@
 // ignore: depend_on_referenced_packages, implementation_imports
-// ignore_for_file: no_leading_underscores_for_local_identifiers, non_constant_identifier_names
+// ignore_for_file: no_leading_underscores_for_local_identifiers, non_constant_identifier_names, unrelated_type_equality_checks
 
 // ignore: depend_on_referenced_packages, implementation_imports
 import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
@@ -12,7 +12,7 @@ import 'package:tarimtek/viewmodel/chat_model.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class KonusmaPage extends StatefulWidget {
-  KonusmaPage({super.key});
+  const KonusmaPage({super.key});
 
   @override
   State<KonusmaPage> createState() => _KonusmaPageState();
@@ -25,14 +25,13 @@ class _KonusmaPageState extends State<KonusmaPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _scrollController.addListener(_listeScrollListener);
   }
 
   @override
   Widget build(BuildContext context) {
-    final _userModel = Provider.of<UserModel>(context);
+    Provider.of<UserModel>(context);
     final _chatModel = Provider.of<ChatModel>(context);
     return Scaffold(
       backgroundColor: Sabitler.arkaplan,
@@ -44,7 +43,7 @@ class _KonusmaPageState extends State<KonusmaPage> {
         ),
       ),
       body: _chatModel.addListener == ChatViewState.Busy
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : Center(
@@ -261,7 +260,7 @@ class _KonusmaPageState extends State<KonusmaPage> {
   }
 
   Widget _yeniElemanlarYukleniyorIndicator() {
-    return Padding(
+    return const Padding(
       padding: EdgeInsets.all(8),
       child: Center(
         child: CircularProgressIndicator(),

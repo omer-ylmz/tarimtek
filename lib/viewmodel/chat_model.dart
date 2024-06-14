@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names, prefer_const_declarations, curly_braces_in_flow_control_structures
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -49,7 +51,7 @@ class ChatModel with ChangeNotifier {
   }
 
   void getMessageWithPagination(bool yeniMesajlarGetiriliyor) async {
-    if (_tumMesajlar!.length > 0) {
+    if (_tumMesajlar!.isNotEmpty) {
       enSonGetirilenMesaj = _tumMesajlar!.last;
     }
     if (!yeniMesajlarGetiriliyor) state = ChatViewState.Busy;
@@ -66,7 +68,7 @@ class ChatModel with ChangeNotifier {
     }
 
     _tumMesajlar!.addAll(getirilenMesajlar);
-    if (_tumMesajlar!.length > 0) {
+    if (_tumMesajlar!.isNotEmpty) {
       _listeyeEklenenIlkMesaj = _tumMesajlar!.first;
     }
 
@@ -86,7 +88,7 @@ class ChatModel with ChangeNotifier {
     if (_hasMore) {
       getMessageWithPagination(true);
     }
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
   }
 
   void yeniMesajListenerAta() {

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, no_leading_underscores_for_local_identifiers, unused_local_variable, prefer_final_fields, unused_element, sort_child_properties_last
+
 import 'package:flutter/material.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/model/user.dart';
@@ -8,7 +10,7 @@ import 'package:tarimtek/viewmodel/chat_model.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class KullanicilarSayfasi extends StatefulWidget {
-  const KullanicilarSayfasi({Key? key}) : super(key: key);
+  const KullanicilarSayfasi({super.key});
 
   @override
   State<KullanicilarSayfasi> createState() => _KullanicilarSayfasiState();
@@ -40,7 +42,7 @@ class _KullanicilarSayfasiState extends State<KullanicilarSayfasi> {
       body: Consumer<AllUserModel>(
         builder: (context, model, child) {
           if (model.state == AllUserViewState.Busy) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (model.state == AllUserViewState.Loaded) {
@@ -106,7 +108,7 @@ class _KullanicilarSayfasiState extends State<KullanicilarSayfasi> {
             builder: (context) => ChangeNotifierProvider<ChatModel>(
               create: (context) => ChatModel(
                   currentUser: _userModel.user!, sohbetEdilenUser: oAnkiUser),
-              child: KonusmaPage(
+              child: const KonusmaPage(
                   ),
             ),
           ),
@@ -131,7 +133,7 @@ class _KullanicilarSayfasiState extends State<KullanicilarSayfasi> {
   }
 
   Widget _yeniElemanlarYukleniyorIndicator() {
-    return Padding(
+    return const Padding(
       padding: EdgeInsets.all(8),
       child: Center(
         child: CircularProgressIndicator(),
@@ -159,7 +161,7 @@ class _KullanicilarSayfasiState extends State<KullanicilarSayfasi> {
   Widget _kullaniciYok() {
     return RefreshIndicator(
       child: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         child: SizedBox(
           height: MediaQuery.of(context).size.height - 150,
           child: Center(

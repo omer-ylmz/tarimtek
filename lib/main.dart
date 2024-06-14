@@ -6,7 +6,6 @@ import 'package:tarimtek/firebase_options.dart';
 import 'package:tarimtek/locator/locator.dart';
 import 'package:tarimtek/pages/landing/landing_page.dart';
 import 'package:tarimtek/viewmodel/all_user_model.dart'; // Yeni eklediğimiz model dosyası
-import 'package:tarimtek/viewmodel/chat_model.dart';
 import 'package:tarimtek/viewmodel/ilan_model.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 

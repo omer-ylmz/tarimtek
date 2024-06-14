@@ -194,7 +194,6 @@ class FirestoreDBService implements DBBase {
   @override
   Future<List<AppUser>?> getUserWithPagination(
       AppUser? enSonGetirilenUser, int getirilecekElemanSayisi) async {
-    // TODO: implement getUserWithPagination
     late QuerySnapshot _querySnapshot;
     List<AppUser> tumKullanicilar = [];
     if (enSonGetirilenUser == null) {
@@ -210,7 +209,7 @@ class FirestoreDBService implements DBBase {
           .startAfter([enSonGetirilenUser.userName])
           .limit(getirilecekElemanSayisi)
           .get();
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
     }
 
     for (DocumentSnapshot snap in _querySnapshot.docs) {
@@ -245,7 +244,7 @@ class FirestoreDBService implements DBBase {
           .startAfter([enSonGetirilenMesaj.date])
           .limit(getirilecekElemanSayisi!)
           .get();
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
     }
 
     for (DocumentSnapshot snap in _querySnapshot.docs) {

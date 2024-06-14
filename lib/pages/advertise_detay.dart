@@ -1,13 +1,15 @@
+// ignore_for_file: must_be_immutable, no_leading_underscores_for_local_identifiers, avoid_print, prefer_interpolation_to_compose_strings
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tarimtek/model/ilan.dart';
-import 'package:tarimtek/pages/home_page.dart';
+import 'package:tarimtek/pages/landing/landing_page.dart';
 import 'package:tarimtek/viewmodel/ilan_model.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class AdversiteDetay extends StatefulWidget {
   Ilan? ilan;
-  AdversiteDetay({Key? key, this.ilan}) : super(key: key);
+  AdversiteDetay({super.key, this.ilan});
 
   @override
   State<AdversiteDetay> createState() => _AdversiteDetayState();
@@ -22,34 +24,36 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('İlan Verin'),
+        title: const Text('İlan Verin'),
         actions: [
           TextButton(
             onPressed: () async {
               try {
                 await _ilanModel.saveAdvert(widget.ilan!);
+                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text('İlan başarıyla paylaşıldı!'),
                     duration: Duration(seconds: 2),
                   ),
                 );
                 Navigator.push(
+                  // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(
-                    builder: (context) => HomePage(user: _userModel.user!),
+                    builder: (context) => const LandingPage(),
                   ),
                 );
               } catch (e) {
                 print("hata oluştu db atarken");
               }
             },
-            child: Text(
+            child: const Text(
               'Yayınla',
               style: TextStyle(
                 color: Colors.orange,
@@ -71,14 +75,14 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                   backgroundImage: NetworkImage(_userModel
                       .user!.profilURL!), // Replace with user's profile image
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(_userModel.user!.userName!),
                     Text(
                       _userModel.user!.email!,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 14,
                       ),
@@ -87,8 +91,8 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            Align(
+            const SizedBox(height: 20),
+            const Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'İlan Özeti',
@@ -98,7 +102,7 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Card(
               elevation: 2,
               child: Padding(
@@ -107,19 +111,19 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(widget.ilan!.ilanTanimi!),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Card(
                       color: Colors.grey[200],
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Row(
                           children: [
-                            CircleAvatar(
+                            const CircleAvatar(
                               radius: 30,
                               backgroundImage: NetworkImage(
                                   'https://static.ticimax.cloud/35637/uploads/urunresimleri/buyuk/cig-ic-findik-7dcb.jpg'),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,7 +132,7 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                                   Row(
                                     children: [
                                       Text(widget.ilan!.isSuresi!),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 15,
                                       ),
                                       Text(widget.ilan!.isUcreti! + "₺"),
@@ -148,12 +152,12 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text('Application details'),
+                      child: const Text('Application details'),
                     ),
                   ],
                 ),

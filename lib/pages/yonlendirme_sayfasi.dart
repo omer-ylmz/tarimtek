@@ -1,6 +1,5 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_final_fields, unused_field
+// ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_final_fields, unused_field, avoid_print
 
-import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,7 +17,7 @@ import 'package:tarimtek/pages/home_page.dart';
 class Yonlendirme extends StatefulWidget {
   final AppUser user;
 
-  Yonlendirme({super.key, required this.user});
+  const Yonlendirme({super.key, required this.user});
 
   @override
   State<Yonlendirme> createState() => _HomePageState();

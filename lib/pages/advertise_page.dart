@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tarimtek/constants/sehir.dart';
@@ -53,9 +55,9 @@ class _AdvertisePageState extends State<AdvertisePage> {
                           style: Sabitler
                               .ilanBaslikStyle, // İş tanımı başlık stili
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8.0),
                             border: Border.all(
@@ -65,7 +67,7 @@ class _AdvertisePageState extends State<AdvertisePage> {
                           ),
                           child: TextField(
                             style: Sabitler.ilanBaslikSecilenStyle,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'İş tanımını buraya girin',
                               border: InputBorder.none,
                             ),
@@ -102,7 +104,7 @@ class _AdvertisePageState extends State<AdvertisePage> {
                         "Fındık hasat dönemi süresince geçici olarak işe alınan işçi.",
                         true, // iş pozisyonu
                       ),
-                      ListTile()
+                      const ListTile()
                     ],
                   ),
                   child: secenek("İş Pozisyonu", isPozisyonu),
@@ -119,15 +121,15 @@ class _AdvertisePageState extends State<AdvertisePage> {
                           'İşin Konumu',
                           style: Sabitler.ilanBaslikStyle,
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                         Row(
                           children: [
                             Expanded(
                               child: DropdownButton<String>(
-                                hint: Text("İli Seçiniz"),
+                                hint: const Text("İli Seçiniz"),
                                 value: _selectedIl,
                                 style: Sabitler.ilanBaslikSecilenStyle,
-                                icon: Icon(Icons.arrow_drop_down),
+                                icon: const Icon(Icons.arrow_drop_down),
                                 iconSize: 24,
                                 elevation: 16,
                                 isExpanded: true,
@@ -145,13 +147,13 @@ class _AdvertisePageState extends State<AdvertisePage> {
                                 }).toList(),
                               ),
                             ),
-                            SizedBox(width: 8.0),
+                            const SizedBox(width: 8.0),
                             Expanded(
                               child: DropdownButton<String>(
-                                hint: Text("İlçeyi Seçiniz"),
+                                hint: const Text("İlçeyi Seçiniz"),
                                 value: _selectedIlce,
                                 style: Sabitler.ilanBaslikSecilenStyle,
-                                icon: Icon(Icons.arrow_drop_down),
+                                icon: const Icon(Icons.arrow_drop_down),
                                 iconSize: 24,
                                 elevation: 16,
                                 isExpanded: true,
@@ -200,7 +202,7 @@ class _AdvertisePageState extends State<AdvertisePage> {
                         "Günlük: Sabah 08:00 - Akşam 17:00 iş süresi.",
                         false, // iş süresi
                       ),
-                      ListTile()
+                      const ListTile()
                     ],
                   ),
                   child: secenek("İşin Süresi", isSuresi),
@@ -218,9 +220,9 @@ class _AdvertisePageState extends State<AdvertisePage> {
                           style: Sabitler
                               .ilanBaslikStyle, // İş ücreti başlık stili
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8.0),
                             border: Border.all(
@@ -230,7 +232,7 @@ class _AdvertisePageState extends State<AdvertisePage> {
                           ),
                           child: TextField(
                             style: Sabitler.ilanBaslikSecilenStyle,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Ücreti buraya girin',
                               border: InputBorder.none,
                             ),
@@ -245,7 +247,7 @@ class _AdvertisePageState extends State<AdvertisePage> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Padding(
@@ -264,13 +266,15 @@ class _AdvertisePageState extends State<AdvertisePage> {
                             isUcreti: _isUcreti,
                             selectedIl: _selectedIl,
                             selectedIlce: _selectedIlce);
+
+                        Navigator.of(context, rootNavigator: true).push(
+                          MaterialPageRoute(
+                            builder: (context) => AdversiteDetay(
+                              ilan: _girilenIlan,
+                            ),
+                          ),
+                        );
                       }
-                      Navigator.of(context, rootNavigator: true)
-                          .push(MaterialPageRoute(
-                        builder: (context) => AdversiteDetay(
-                          ilan: _girilenIlan,
-                        ),
-                      ));
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -306,12 +310,12 @@ class _AdvertisePageState extends State<AdvertisePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Hata'),
+        title: const Text('Hata'),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Tamam'),
+            child: const Text('Tamam'),
           ),
         ],
       ),
@@ -333,7 +337,7 @@ class _AdvertisePageState extends State<AdvertisePage> {
                 style: Sabitler.ilanBaslikSecilenStyle,
               )
             : null,
-        trailing: Icon(
+        trailing: const Icon(
           Icons.add_circle_outline,
           color: Sabitler.sariRenk,
         ),

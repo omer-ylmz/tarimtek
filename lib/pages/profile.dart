@@ -9,7 +9,7 @@ import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -240,7 +240,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _cikisIcinOnayIste(BuildContext context) async {
-    final sonuc = await PlatformDuyarliAlertDialog(
+    final sonuc = await const PlatformDuyarliAlertDialog(
       baslik: "Emin Misiniz?",
       icerik: "Çıkmak istediğinizden emin misiniz?",
       anaButonYazisi: "Evet",
@@ -273,7 +273,7 @@ class _ProfilePageState extends State<ProfilePage> {
       var url = await _userModel.uploadFile(
           _userModel.user!.userId, "profil_foto", _profilFoto!);
       if (url != null) {
-        await PlatformDuyarliAlertDialog(
+        await const PlatformDuyarliAlertDialog(
           baslik: "Başarılı",
           icerik: "Profil fotoğrafınız güncellendi.",
           anaButonYazisi: "Tamam",

@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, unused_local_variable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,9 +51,9 @@ class _MessagingPageState extends State<MessagingPage> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => KullanicilarSayfasi(),
+                      builder: (context) => const KullanicilarSayfasi(),
                     )),
-                child: Icon(Icons.people)),
+                child: const Icon(Icons.people)),
           )
         ],
       ),
@@ -100,7 +102,7 @@ class _MessagingPageState extends State<MessagingPage> {
                                           profilURL: oAnkiKonusma
                                               .konusulanUserProfilURL),
                                     ),
-                                    child: KonusmaPage(),
+                                    child: const KonusmaPage(),
                                   ),
                                 ),
                               );

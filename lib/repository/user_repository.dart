@@ -1,4 +1,4 @@
-// ignore_for_file: body_might_complete_normally_nullable, no_leading_underscores_for_local_identifiers, avoid_print
+// ignore_for_file: body_might_complete_normally_nullable, no_leading_underscores_for_local_identifiers, avoid_print, prefer_interpolation_to_compose_strings
 
 import 'dart:io';
 
@@ -200,7 +200,7 @@ class UserRepository implements AuthBase {
             var _duration =
                 _zaman.difference(oAnkiKonusma.olusturulma_tarihi!.toDate());
             oAnkiKonusma.aradakiFark =
-                await timeago.format(_zaman.subtract(_duration));
+                timeago.format(_zaman.subtract(_duration));
           } else {
             print(
                 "Zaman veya oluşturulma tarihi null"); // Hata ayıklama çıktısı
@@ -217,7 +217,7 @@ class UserRepository implements AuthBase {
               var _duration =
                   _zaman.difference(oAnkiKonusma.olusturulma_tarihi!.toDate());
               oAnkiKonusma.aradakiFark =
-                  await timeago.format(_zaman.subtract(_duration));
+                  timeago.format(_zaman.subtract(_duration));
             } else {
               print(
                   "Zaman veya oluşturulma tarihi null"); // Hata ayıklama çıktısı
