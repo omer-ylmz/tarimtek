@@ -4,6 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/model/ilan.dart';
 import 'package:tarimtek/model/user.dart';
+import 'package:tarimtek/pages/konusma_page.dart';
+import 'package:tarimtek/viewmodel/chat_model.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 import 'package:geocoding/geocoding.dart'; // For geocoding
 
@@ -24,6 +26,7 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
   LatLng? _center;
   bool _isLoading = true;
   String? _error;
+  AppUser? ilanSahibiUser;
 
   @override
   void initState() {
@@ -69,7 +72,7 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
           } else if (!snapshot.hasData || snapshot.data == null) {
             return Center(child: Text('Kullanıcı bulunamadı'));
           } else {
-            AppUser? ilanSahibiUser = snapshot.data;
+            ilanSahibiUser = snapshot.data;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -145,41 +148,50 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                       style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
                     ),
                     SizedBox(height: 16),
-                    // Text('Konum', style: Sabitler.ilanDetayBaslikStyleKucuk),
-                    // SizedBox(height: 8),
-                    // Text(
-                    //   widget.ilan.selectedIlce! + "," + widget.ilan.selectedIl!,
-                    //   style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
-                    // ),
-                    // SizedBox(height: 16),
-                    // _isLoading
-                    //     ? Center(child: CircularProgressIndicator())
-                    //     : _error != null
-                    //         ? Center(child: Text(_error!))
-                    //         : Container(
-                    //             height: 200,
-                    //             decoration: BoxDecoration(
-                    //               borderRadius: BorderRadius.circular(8),
-                    //               border: Border.all(color: Colors.grey),
-                    //             ),
-                    //             child: GoogleMap(
-                    //               onMapCreated: _onMapCreated,
-                    //               initialCameraPosition: CameraPosition(
-                    //                 target: _center!,
-                    //                 zoom: 14.0,
-                    //               ),
-                    //             ),
-                    //           ),
-                    // SizedBox(height: 16),
+                    Text('Konum', style: Sabitler.ilanDetayBaslikStyleKucuk),
+                    SizedBox(height: 8),
+                    Text(
+                      widget.ilan.selectedIlce! + "," + widget.ilan.selectedIl!,
+                      style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
+                    ),
+                    SizedBox(height: 16),
+                    _isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : _error != null
+                            ? Center(child: Text(_error!))
+                            : Container(
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: GoogleMap(
+                                  onMapCreated: _onMapCreated,
+                                  initialCameraPosition: CameraPosition(
+                                    target: _center!,
+                                    zoom: 14.0,
+                                  ),
+                                ),
+                              ),
+                    SizedBox(height: 16),
                     Center(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 50, vertical: 15),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 40, right: 40),
+                        child: ElevatedButton(
+                          style: const ButtonStyle(
+                              backgroundColor:
+                                  MaterialStatePropertyAll(Sabitler.anaRenk)),
+                          onPressed: () => _formSubmit(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                "İletişime Geç",
+                                style: Sabitler.butonYaziStyleKapali,
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Text('İLETİŞİME GEÇ'),
                       ),
                     ),
                   ],
@@ -188,6 +200,19 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
             );
           }
         },
+      ),
+    );
+  }
+
+  _formSubmit() {
+    final _userModel = Provider.of<UserModel>(context, listen: false);
+    Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider<ChatModel>(
+          create: (context) => ChatModel(
+              currentUser: _userModel.user!, sohbetEdilenUser: ilanSahibiUser!),
+          child: const KonusmaPage(),
+        ),
       ),
     );
   }
