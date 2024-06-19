@@ -2,20 +2,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/model/ilan.dart';
 import 'package:tarimtek/pages/landing/landing_page.dart';
 import 'package:tarimtek/viewmodel/ilan_model.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
-class AdversiteDetay extends StatefulWidget {
+class AdversiteOzetDetay extends StatefulWidget {
   Ilan? ilan;
-  AdversiteDetay({super.key, this.ilan});
+  AdversiteOzetDetay({super.key, this.ilan});
 
   @override
-  State<AdversiteDetay> createState() => _AdversiteDetayState();
+  State<AdversiteOzetDetay> createState() => _AdversiteOzetDetayState();
 }
 
-class _AdversiteDetayState extends State<AdversiteDetay> {
+class _AdversiteOzetDetayState extends State<AdversiteOzetDetay> {
   @override
   Widget build(BuildContext context) {
     final _userModel = Provider.of<UserModel>(context);
@@ -29,13 +30,15 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
             Navigator.pop(context);
           },
         ),
-        title: const Text('İlan Verin'),
+        title: Text(
+          'İlan Verin',
+          style: Sabitler.baslikStyleKucuk,
+        ),
         actions: [
           TextButton(
             onPressed: () async {
               try {
                 await _ilanModel.saveAdvert(widget.ilan!);
-                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('İlan başarıyla paylaşıldı!'),
@@ -53,14 +56,7 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                 print("hata oluştu db atarken");
               }
             },
-            child: const Text(
-              'Yayınla',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            child: Text('Yayınla', style: Sabitler.baslikStyleKucukSari),
           ),
         ],
       ),
@@ -72,35 +68,26 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: NetworkImage(_userModel
-                      .user!.profilURL!), // Replace with user's profile image
+                  backgroundImage: NetworkImage(_userModel.user!.profilURL! ?? ""), // Replace with user's profile image
                 ),
                 const SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(_userModel.user!.userName!),
                     Text(
-                      _userModel.user!.email!,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
+                      _userModel.user!.userName!,
+                      style: Sabitler.yaziStyleSiyahBaslik,
                     ),
+                    Text(_userModel.user!.email!,
+                        style: Sabitler.yaziStyleGriAltBaslik),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                'İlan Özeti',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
+              child: Text('İlan Özeti', style: Sabitler.yaziStyleSiyahBaslik),
             ),
             const SizedBox(height: 10),
             Card(
@@ -110,7 +97,10 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.ilan!.ilanTanimi!),
+                    Text(
+                      widget.ilan!.ilanTanimi!,
+                      style: Sabitler.yaziStyleSiyahAltBaslik,
+                    ),
                     const SizedBox(height: 20),
                     Card(
                       color: Colors.grey[200],
@@ -128,20 +118,30 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(widget.ilan!.isPozisyonu!),
+                                  Text(
+                                    widget.ilan!.isPozisyonu!,
+                                    style: Sabitler.yaziStyleSiyahAltBaslik,
+                                  ),
                                   Row(
                                     children: [
-                                      Text(widget.ilan!.isSuresi!),
+                                      Text(
+                                        widget.ilan!.isSuresi!,
+                                        style: Sabitler.yaziStyleSiyahAltBaslik,
+                                      ),
                                       const SizedBox(
                                         width: 15,
                                       ),
-                                      Text(widget.ilan!.isUcreti! + "₺"),
+                                      Text(
+                                        widget.ilan!.isUcreti! + "₺",
+                                        style: Sabitler.yaziStyleSiyahAltBaslik,
+                                      ),
                                     ],
                                   ),
                                   Container(
                                     alignment: Alignment.centerRight,
                                     child: Text(
                                       "${widget.ilan!.selectedIlce}, ${widget.ilan!.selectedIl}",
+                                      style: Sabitler.yaziStyleSiyahAltBaslik,
                                       textAlign: TextAlign.end,
                                     ),
                                   )
@@ -157,7 +157,10 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text('Application details'),
+                      child: Text(
+                        'Düzenle',
+                        style: Sabitler.yaziStyleSiyahAltBaslik,
+                      ),
                     ),
                   ],
                 ),

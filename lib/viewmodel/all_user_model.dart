@@ -35,6 +35,7 @@ class AllUserModel with ChangeNotifier {
   //yeni eleman getir true yapılır refresh ve sayfalama için
   getUserWithPagination(
       AppUser? enSonGetirilenUser, bool yeniElemanlarGetiriliyor) async {
+    
     if (_tumKullanicilar!.isNotEmpty) {
       _enSonGetirilenUser = _tumKullanicilar!.last;
     }

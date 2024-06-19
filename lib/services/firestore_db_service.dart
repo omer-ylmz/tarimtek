@@ -275,4 +275,37 @@ class FirestoreDBService implements DBBase {
     var querySnapshot = await _firebaseDB.collection('ilanlar').get();
     return querySnapshot.docs.map((doc) => Ilan.fromMap(doc.data())).toList();
   }
+
+  @override
+  Future<List<Ilan>?> getIlanWithPagination(
+    Ilan? enSonGetirilenIlan,
+    int getirilecekElemanSayisi,
+  ) async {
+    late QuerySnapshot _querySnapshot;
+    List<Ilan> tumIlanlar = [];
+
+    if (enSonGetirilenIlan == null) {
+      _querySnapshot = await FirebaseFirestore.instance
+          .collection("ilanlar")
+          .orderBy("olusturulma_tarihi")
+          .limit(getirilecekElemanSayisi)
+          .get();
+    } else {
+      _querySnapshot = await FirebaseFirestore.instance
+          .collection("ilanlar")
+          .orderBy("olusturulma_tarihi")
+          .startAfter([enSonGetirilenIlan.olusturulma_tarihi])
+          .limit(getirilecekElemanSayisi)
+          .get();
+
+      await Future.delayed(const Duration(seconds: 1));
+    }
+
+    for (DocumentSnapshot snap in _querySnapshot.docs) {
+      Ilan ilan = Ilan.fromMap(snap.data() as Map<String, dynamic>);
+      tumIlanlar.add(ilan);
+    }
+
+    return tumIlanlar;
+  }
 }

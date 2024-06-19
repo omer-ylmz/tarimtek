@@ -1,6 +1,7 @@
-
 import 'package:flutter/material.dart';
+import 'package:tarimtek/locator/locator.dart';
 import 'package:tarimtek/model/ilan.dart';
+import 'package:tarimtek/repository/user_repository.dart';
 import 'package:tarimtek/services/database_base.dart';
 import 'package:tarimtek/services/firestore_db_service.dart';
 
@@ -10,6 +11,7 @@ class IlanModel with ChangeNotifier {
   IlanState _state = IlanState.idle;
   final DBBase _dbBase = FirestoreDBService();
   List<Ilan> _ilanlar = [];
+  final UserRepository _userRepository = locator<UserRepository>();
 
   IlanState get state => _state;
   List<Ilan> get ilanlar => _ilanlar;
@@ -41,5 +43,11 @@ class IlanModel with ChangeNotifier {
     } finally {
       state = IlanState.idle;
     }
+  }
+
+  Future<List<Ilan>?> getIlanWithPagination(
+      Ilan? enSonGetirilenIlan, int getirilecekElemanSayisi) async {
+    return await _userRepository.getIlanWithPagination(
+        enSonGetirilenIlan, getirilecekElemanSayisi);
   }
 }

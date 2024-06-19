@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:tarimtek/locator/locator.dart';
+import 'package:tarimtek/model/ilan.dart';
 import 'package:tarimtek/model/konusma.dart';
 import 'package:tarimtek/model/mesaj.dart';
 import 'package:tarimtek/model/user.dart';
@@ -23,6 +24,7 @@ class UserRepository implements AuthBase {
   final FirebaseStorageService _firebaseStorageService =
       locator<FirebaseStorageService>();
   List<AppUser> tumKullaniciListesi = [];
+  List<Ilan> tumIlanlarListesi = [];
 
   AppMode appMode = AppMode.release;
 
@@ -254,13 +256,40 @@ class UserRepository implements AuthBase {
     }
   }
 
-  Future<List<Mesaj>?>? getMessageWithPagination(String? currentUserID,
-      String? sohberEdilenUserID, int? getirilecekElemanSayisi,Mesaj? enSonGetirilenMesaj) async {
+  Future<List<Mesaj>?>? getMessageWithPagination(
+      String? currentUserID,
+      String? sohberEdilenUserID,
+      int? getirilecekElemanSayisi,
+      Mesaj? enSonGetirilenMesaj) async {
     if (appMode == AppMode.debug) {
       return null;
     } else {
-      return await _firestoreDBService.getMessageWithPagination(
-          currentUserID,sohberEdilenUserID,getirilecekElemanSayisi,enSonGetirilenMesaj);
+      return await _firestoreDBService.getMessageWithPagination(currentUserID,
+          sohberEdilenUserID, getirilecekElemanSayisi, enSonGetirilenMesaj);
+    }
+  }
+
+  Future<List<Ilan>?>? getIlanWithPagination(
+      Ilan? enSonGetirilenIlan, int getirilecekElemanSayisi) async {
+    if (appMode == AppMode.debug) {
+      return null;
+    } else {
+      List<Ilan>? _ilanList = await _firestoreDBService.getIlanWithPagination(
+        enSonGetirilenIlan,
+        getirilecekElemanSayisi,
+      );
+      tumIlanlarListesi.addAll(_ilanList!);
+      return _firestoreDBService.getIlanWithPagination(
+          enSonGetirilenIlan, getirilecekElemanSayisi);
+    }
+  }
+
+  @override
+  Future<AppUser?> readUser(String userID) {
+    if (appMode == AppMode.debug) {
+      return Future.value(null);
+    } else {
+      return _firestoreDBService.readUser(userID);
     }
   }
 }

@@ -2,10 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tarimtek/common-package/platform_duyarli_alert_dialog.dart';
 import 'package:tarimtek/constants/sehir.dart';
 import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/model/ilan.dart';
-import 'package:tarimtek/pages/advertise_detay.dart';
+import 'package:tarimtek/pages/advertise_ozet_detay.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
 
 class AdvertisePage extends StatefulWidget {
@@ -18,10 +19,10 @@ class AdvertisePage extends StatefulWidget {
 class _AdvertisePageState extends State<AdvertisePage> {
   String isPozisyonu = 'Seçilen Değer Yok';
   String isSuresi = 'Seçilen Değer Yok';
-  String _ilanTanimi = ''; // Kullanıcı tarafından girilen iş tanımı metni
+  String _ilanTanimi = '';
   String? _selectedIl;
   String? _selectedIlce;
-  String _isUcreti = ''; // Kullanıcı tarafından girilen iş ücreti metni
+  String _isUcreti = '';
   Ilan? _girilenIlan;
 
   @override
@@ -269,7 +270,7 @@ class _AdvertisePageState extends State<AdvertisePage> {
 
                         Navigator.of(context, rootNavigator: true).push(
                           MaterialPageRoute(
-                            builder: (context) => AdversiteDetay(
+                            builder: (context) => AdversiteOzetDetay(
                               ilan: _girilenIlan,
                             ),
                           ),
@@ -300,26 +301,14 @@ class _AdvertisePageState extends State<AdvertisePage> {
         _selectedIl == null ||
         _selectedIlce == null ||
         _isUcreti.isEmpty) {
-      _showErrorDialog('Lütfen tüm alanları doldurun.');
+      const PlatformDuyarliAlertDialog(
+        baslik: "Hata",
+        icerik: "Lütfen tüm alanları doldurun",
+        anaButonYazisi: "Tamam",
+      ).goster(context);
       return false;
     }
     return true;
-  }
-
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Hata'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Tamam'),
-          ),
-        ],
-      ),
-    );
   }
 
   Card secenek(String secenekAdi, String atanacakDegisken) {

@@ -6,7 +6,7 @@ class FakeAuthentication implements AuthBase {
 
   @override
   Future<AppUser?> currentUser() async {
-    return Future.value(AppUser(userId: userID,email: "fakeuser@fake.com"));
+    return Future.value(AppUser(userId: userID, email: "fakeuser@fake.com"));
   }
 
   @override
@@ -14,7 +14,7 @@ class FakeAuthentication implements AuthBase {
     return await Future.delayed(
       const Duration(seconds: 2),
       () {
-        AppUser(userId: userID,email: "fakeuser@fake.com");
+        AppUser(userId: userID, email: "fakeuser@fake.com");
         return null;
       },
     );
@@ -30,7 +30,7 @@ class FakeAuthentication implements AuthBase {
     return await Future.delayed(
       const Duration(seconds: 2),
       () {
-        AppUser(userId: "google_user_id_1234567",email: "fakeuser@fake.com");
+        AppUser(userId: "google_user_id_1234567", email: "fakeuser@fake.com");
         return null;
       },
     );
@@ -42,7 +42,7 @@ class FakeAuthentication implements AuthBase {
     return await Future.delayed(
       const Duration(seconds: 2),
       () {
-        AppUser(userId: "created_user_id_12345678",email: "fakeuser@fake.com");
+        AppUser(userId: "created_user_id_12345678", email: "fakeuser@fake.com");
         return null;
       },
     );
@@ -53,18 +53,20 @@ class FakeAuthentication implements AuthBase {
     return await Future.delayed(
       const Duration(seconds: 2),
       () {
-        AppUser(userId: "sign_in_email_user_id_12345678",email: "fakeuser@fake.com");
+        AppUser(
+            userId: "sign_in_email_user_id_12345678",
+            email: "fakeuser@fake.com");
         return null;
       },
     );
   }
-  
+
   @override
-  Future<AppUser?> changePassword(String email) async{
+  Future<AppUser?> changePassword(String email) async {
     return await Future.delayed(
       const Duration(seconds: 2),
       () {
-        AppUser(userId: "google_user_id_1234567",email: "fakeuser@fake.com");
+        AppUser(userId: "google_user_id_1234567", email: "fakeuser@fake.com");
         return null;
       },
     );

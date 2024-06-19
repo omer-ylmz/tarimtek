@@ -168,8 +168,6 @@ class UserModel with ChangeNotifier implements AuthBase {
     return _userRepository.getMessages(currentUserID, sohbetEdilenUserID);
   }
 
-  
-
   Future<List<Konusma>?> getAllConversations(String userID) async {
     return await _userRepository.getAllConversations(userID);
   }
@@ -178,5 +176,9 @@ class UserModel with ChangeNotifier implements AuthBase {
       AppUser? enSonGetirilenUser, int sayfadakiGetirilecekElemanSayisi) async {
     return await _userRepository.getUserWithPagination(
         enSonGetirilenUser, sayfadakiGetirilecekElemanSayisi);
+  }
+
+  Future<AppUser?> readUser(String userID) async {
+    return await _userRepository.readUser(userID);
   }
 }

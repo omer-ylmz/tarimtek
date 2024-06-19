@@ -73,19 +73,6 @@ class _KullanicilarSayfasiState extends State<KullanicilarSayfasi> {
     );
   }
 
-  Future<void> getUser() async {
-    // getUser fonksiyonu artık kullanılmıyor, bu yüzden kaldırılmayacak
-  }
-
-  /* Widget _kullaniciListesiniOlustur() {
-    // Bu fonksiyon kullanılmayacak şekilde yorum satırına alınacak
-  } */
-
-  Future<void> _refreshUserList() async {
-    _hasMore = true;
-    _enSonGetirilenUser = null;
-    getUser();
-  }
 
   Future<void> _refreshUserListYoksa() async {
     setState(() {});

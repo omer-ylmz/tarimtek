@@ -5,6 +5,7 @@ import 'package:tarimtek/constants/text_style.dart';
 import 'package:tarimtek/firebase_options.dart';
 import 'package:tarimtek/locator/locator.dart';
 import 'package:tarimtek/pages/landing/landing_page.dart';
+import 'package:tarimtek/viewmodel/all_ilan_model.dart';
 import 'package:tarimtek/viewmodel/all_user_model.dart'; // Yeni eklediğimiz model dosyası
 import 'package:tarimtek/viewmodel/ilan_model.dart';
 import 'package:tarimtek/viewmodel/user_model.dart';
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<IlanModel>(
           create: (context) => IlanModel(),
+        ),
+        ChangeNotifierProvider<AllIlanModel>(
+          create: (context) => AllIlanModel(),
         ),
       ],
       child: MaterialApp(

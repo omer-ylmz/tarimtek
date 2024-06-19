@@ -31,6 +31,8 @@ dependencies:
   timeago: ^3.6.1
   firebase_messaging: ^14.9.4
   flutter_local_notifications: ^17.1.2
+  google_maps_flutter: ^2.6.1
+  geocoding: ^3.0.0
   
 dev_dependencies:
   flutter_test:

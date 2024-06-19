@@ -19,4 +19,6 @@ abstract class DBBase {
   Future<DateTime?> saatiGoster(String userID);
   Future<bool?> saveAdvert(Ilan ilan);
   Future<List<Ilan>>? getAllAdverts();
+  Future<List<Ilan>?> getIlanWithPagination(
+      Ilan? enSonGetirilenIlan, int getirilecekElemanSayisi,);
 }
