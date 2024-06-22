@@ -29,7 +29,7 @@ class _HomePageState extends State<Yonlendirme> {
   Map<TabItem, Widget> tumSayfalar() {
     return {
       TabItem.Anaekran: HomePage(user: widget.user),
-      TabItem.Uyari: const NewsWarningPage(),
+      TabItem.Uyari:  NewsWarningPage(),
       TabItem.Ilanverme: const AdvertisePage(),
       TabItem.Mesajlasma: const MessagingPage(),
       TabItem.Profil: const ProfilePage()

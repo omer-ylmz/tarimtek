@@ -73,4 +73,7 @@ class Sabitler {
 
   static final TextStyle yaziStyleSiyahAltBaslikBuyuk = GoogleFonts.quicksand(
       fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black);
+
+  static final TextStyle yaziStyleSiyahOkuma = GoogleFonts.quicksand(
+      fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black);
 }

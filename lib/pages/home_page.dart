@@ -35,8 +35,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Sabitler.arkaplan,
       appBar: AppBar(
-        backgroundColor: Sabitler.ikinciRenk,
-        title: const Text("İlanlar"),
+        backgroundColor: Sabitler.arkaplan,
+        title: Center(child: Text("İlanlar", style: Sabitler.baslikStyleKucuk)),
       ),
       body: Consumer<AllIlanModel>(
         builder: (context, model, child) {
