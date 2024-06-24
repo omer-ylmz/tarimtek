@@ -107,31 +107,34 @@ class _AdversiteDetayState extends State<AdversiteDetay> {
                             style: Sabitler.ilanDetayBaslikStyle)),
                     SizedBox(height: 8),
                     Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          ilanSahibiUser!.userName!,
-                          style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
-                        ),
-                        Text(
-                          " • ",
-                          style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
-                        ),
-                        Text(
-                          widget.ilan.selectedIl!,
-                          style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
-                        ),
-                        Text(
-                          " • ",
-                          style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
-                        ),
-                        Text(
-                          widget.ilan.isSuresi!,
-                          style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
-                        )
-                      ],
-                    )),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 8.0, // Öğeler arasında yatay boşluk
+                        runSpacing: 4.0, // Öğeler arasında dikey boşluk
+                        children: [
+                          Text(
+                            ilanSahibiUser!.userName!,
+                            style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
+                          ),
+                          Text(
+                            " • ",
+                            style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
+                          ),
+                          Text(
+                            widget.ilan.selectedIl!,
+                            style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
+                          ),
+                          Text(
+                            " • ",
+                            style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
+                          ),
+                          Text(
+                            widget.ilan.isSuresi!,
+                            style: Sabitler.yaziStyleSiyahAltBaslikBuyuk,
+                          )
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 16),
                     Center(
                       child: Text(

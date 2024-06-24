@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, no_leading_underscores_for_local_identifiers, unused_element, prefer_interpolation_to_compose_strings
-// ignore_for_file: unused_field, unnecessary_import
-
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -79,101 +76,92 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     final _userModel = Provider.of<UserModel>(context);
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: Sabitler.arkaplan,
       body: Padding(
-          padding: const EdgeInsets.only(left: 30, right: 30),
-          child: _userModel.state == ViewState.idle
-              ? ListView(children: [
+        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
+        child: _userModel.state == ViewState.idle
+            ? ListView(
+                children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 50, bottom: 50),
+                    padding: const EdgeInsets.symmetric(vertical: 50),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
-                          "Hoş Geldiniz",
-                          textAlign: TextAlign.center,
-                          style: Sabitler.baslikStyle,
+                        Center(
+                          child: Text(
+                            "Hoş Geldiniz",
+                            textAlign: TextAlign.center,
+                            style: Sabitler.baslikStyle,
+                          ),
                         ),
                         const SizedBox(
                           height: 15,
                         ),
-                        Text(
-                          "Verimli bir tarım deneyimi için biz buradayız. Giriş yapın ve tarımın büyülü dünyasına adım atın.",
-                          textAlign: TextAlign.center,
-                          style: Sabitler.yaziMorStyle,
+                        Center(
+                          child: Text(
+                            "Verimli bir tarım deneyimi için biz buradayız. Giriş yapın ve tarımın büyülü dünyasına adım atın.",
+                            textAlign: TextAlign.center,
+                            style: Sabitler.yaziMorStyle,
+                          ),
                         ),
                         const SizedBox(
                           height: 15,
                         ),
                         Form(
-                            key: _formKey,
-                            child: Column(
-                              children: [
-                                TextFormField(
-                                  keyboardType: TextInputType.emailAddress,
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.mail),
-                                    prefixIconColor: Sabitler.anaRenk,
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    labelText: "Email",
-                                    hintText: "omeryilmaz@gmail.com",
-                                    border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
-                                    ),
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.mail),
+                                  prefixIconColor: Sabitler.anaRenk,
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  labelText: "Email",
+                                  hintText: "omeryilmaz@gmail.com",
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
                                   ),
-                                  validator: (value) {
-                                    //karakter sınırlamalarını kontrol etmek için kullanırız
-                                    if (EmailValidator.validate(value!)) {
-                                      //mail kontrolu yapan sınıfı kullanarak işlem yaptık
-                                      return null;
-                                    } else {
-                                      return "Hatalı mail adresi girişi yaptınız";
-                                    }
-                                  },
-                                  onSaved: (deger) {
-                                    setState(() {
-                                      _email = deger!;
-                                    });
-                                  },
                                 ),
-                                const SizedBox(height: 15),
-                                formAlaniSifre(
-                                  TextInputType.visiblePassword,
-                                  Icons.lock,
-                                  "Şifre",
-                                  "**********",
-                                  _sifre,
-                                  (value) => _sifre = value!,
-                                  yaziGizleme: _sifreGizli,
-                                ),
-                              ],
-                            )),
+                                validator: (value) {
+                                  if (EmailValidator.validate(value!)) {
+                                    return null;
+                                  } else {
+                                    return "Hatalı mail adresi girişi yaptınız";
+                                  }
+                                },
+                                onSaved: (deger) {
+                                  setState(() {
+                                    _email = deger!;
+                                  });
+                                },
+                              ),
+                              const SizedBox(height: 15),
+                              formAlaniSifre(
+                                TextInputType.visiblePassword,
+                                Icons.lock,
+                                "Şifre",
+                                "**********",
+                                _sifre,
+                                (value) => _sifre = value!,
+                                yaziGizleme: _sifreGizli,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: checkBoxValue,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      checkBoxValue = value!;
-                                    });
-                                  },
-                                  activeColor: Sabitler.anaRenk,
-                                ),
-                                Text(
-                                  "Beni Hatırla",
-                                  style: Sabitler.digerStyle,
-                                ),
-                              ],
-                            ),
                             GestureDetector(
                               child: Text(
                                 "Şifrenizi mi unuttunuz?",
@@ -181,25 +169,32 @@ class _SignInPageState extends State<SignInPage> {
                               ),
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ChangePassword(),
-                                    ));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ChangePassword(),
+                                  ),
+                                );
                               },
                             )
                           ],
                         ),
                         const SizedBox(height: 15),
                         Padding(
-                          padding: const EdgeInsets.only(left: 40, right: 40),
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
                           child: ElevatedButton(
-                            style: const ButtonStyle(
-                                backgroundColor:
-                                    MaterialStatePropertyAll(Sabitler.anaRenk)),
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Sabitler.anaRenk),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
                             onPressed: () => _mailIleGiris(),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   "Giriş Yap",
@@ -211,37 +206,39 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                         const SizedBox(height: 10),
                         Padding(
-                          padding: const EdgeInsets.only(left: 40, right: 40),
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
                           child: ElevatedButton(
-                            style: const ButtonStyle(
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Sabitler.ikinciRenk),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Sabitler.ikinciRenk),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
                             ),
                             onPressed: () => _googleIleGiris(context),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 15),
-                                  child: Image.asset(
-                                    "assets/images/google_PNG19635.png",
-                                    fit: BoxFit.fitHeight,
-                                    height: 40,
-                                  ),
+                                Image.asset(
+                                  "assets/images/google_PNG19635.png",
+                                  fit: BoxFit.fitHeight,
+                                  height: 40,
                                 ),
-                                Text(
-                                  "Google ile Giriş",
-                                  style: Sabitler.yaziMorStyle,
+                                Expanded(
+                                  child: Text(
+                                    "Google ile Giriş",
+                                    style: Sabitler.yaziMorStyle,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
                         const SizedBox(height: 10),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
+                        const SizedBox(height: 10),
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
@@ -254,28 +251,32 @@ class _SignInPageState extends State<SignInPage> {
                                 child: Text(
                                   "Üye Olun",
                                   style: Sabitler.yaziSariStyle.copyWith(
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: Sabitler.sariRenk),
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Sabitler.sariRenk,
+                                  ),
                                 ),
                                 onTap: () {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const RegisterPage(),
-                                      ));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const RegisterPage(),
+                                    ),
+                                  );
                                 },
                               ),
                             )
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
-                ])
-              : const Center(
-                  child: CircularProgressIndicator(),
-                )),
+                ],
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              ),
+      ),
     );
   }
 

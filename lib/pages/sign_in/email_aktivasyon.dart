@@ -59,7 +59,7 @@ class _EmailAktivasyonState extends State<EmailAktivasyon> {
               height: 20,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 100, right: 100),
+              padding: const EdgeInsets.only(left: 70, right: 70),
               child: ElevatedButton(
                 style: const ButtonStyle(
                     backgroundColor:
@@ -82,7 +82,7 @@ class _EmailAktivasyonState extends State<EmailAktivasyon> {
             ),
 
             Padding(
-              padding: const EdgeInsets.only(left: 100, right: 100),
+              padding: const EdgeInsets.only(left: 70, right: 70),
               child: ElevatedButton(
                 style: const ButtonStyle(
                   backgroundColor:

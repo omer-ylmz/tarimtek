@@ -30,6 +30,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               Text(
                 "Parolanızı Mı Unuttunuz",
                 style: Sabitler.baslikStyle,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20.0),
               Text(
@@ -70,7 +71,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               ),
               const SizedBox(height: 20.0),
               Padding(
-                padding: const EdgeInsets.only(left: 80, right: 80),
+                padding: const EdgeInsets.only(left: 50, right: 50),
                 child: ElevatedButton(
                   style: const ButtonStyle(
                       backgroundColor:
@@ -88,7 +89,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 80, right: 80),
+                padding: const EdgeInsets.only(left: 50, right: 50),
                 child: ElevatedButton(
                   style: const ButtonStyle(
                       backgroundColor:
