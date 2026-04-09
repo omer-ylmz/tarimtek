@@ -18,17 +18,17 @@ Projemiz son derece modern, "clean UI" standartlarına uygun ve kullanıcı odak
 > **Not:** *(Projenizin ekran görüntülerini GitHub'da yan yana ve düzgün boyutta sergilemek için resimlerinizi proje dizininde bir klasöre (örn: `assets/screenshots/`) ekledikten sonra aşağıdaki gibi HTML veya markdown ile çağırabilirsiniz.)*
 
 <div align="center">
-  <img src="assets/screenshots/01_login.png" width="30%" alt="Gelişmiş Giriş Ekranı ve Google Ent." />
-  <img src="assets/screenshots/02_ana_dashboard.png" width="30%" alt="Ana Sayfa, Fiyat Borsası ve Uyarılar" />
-  <img src="assets/screenshots/03_ilanlar.png" width="30%" alt="İş İlanları: Konum, Süre ve Ücret" />
+  <img src="assets/images/01_login.png" width="30%" alt="Gelişmiş Giriş Ekranı ve Google Ent." />
+  <img src="assets/images/02_ana_dashboard.png" width="30%" alt="Ana Sayfa, Fiyat Borsası ve Uyarılar" />
+  <img src="assets/images/03_ilanlar.png" width="30%" alt="İş İlanları: Konum, Süre ve Ücret" />
 </div>
 
 <br>
 
 <div align="center">
-  <img src="assets/screenshots/04_ilan_verme.png" width="30%" alt="Detaylı ve Kolay İlan Oluşturma" />
-  <img src="assets/screenshots/05_mesajlasma.png" width="30%" alt="Kullanıcılar Arası Canlı Chat" />
-  <img src="assets/screenshots/06_profil_yonetimi.png" width="30%" alt="Kamera/Galeri Destekli Profil Düzenleme" />
+  <img src="assets/images/04_ilan_verme.png" width="30%" alt="Detaylı ve Kolay İlan Oluşturma" />
+  <img src="assets/images/05_mesajlasma.png" width="30%" alt="Kullanıcılar Arası Canlı Chat" />
+  <img src="assets/images/06_profil_yonetimi.png" width="30%" alt="Kamera/Galeri Destekli Profil Düzenleme" />
 </div>
 
 ### 🌟 Öne Çıkan Özellikler
